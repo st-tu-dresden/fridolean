@@ -1,0 +1,1607 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: FridoLean.io
+host: localhost:3001
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: user
+  - name: project
+  - name: entry
+  - name: canvas
+  - name: auth
+paths:
+  /auth/signin:
+    x-swagger-router-controller: auth
+    post:
+      tags:
+        - auth
+      description: Signs in a user
+      operationId: signIn
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SignInBody'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SignInResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /auth/signup:
+    x-swagger-router-controller: auth
+    post:
+      tags:
+        - auth
+      description: Signs up a user
+      operationId: signUp
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SignUpBody'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SignInResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/users-kc/{keycloakID}':
+    put:
+      tags:
+        - user
+      description: Update a user’s information. It will return the updated user object.
+      operationId: createKeycloakUser
+      parameters:
+        - name: keycloakID
+          in: path
+          description: keycloak ID of a user
+          required: true
+          type: string
+          format: uuid
+        - name: newData
+          in: body
+          description: Update User
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateUser'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserInformation'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/users/{userID}':
+    x-swagger-router-controller: user
+    get:
+      tags:
+        - user
+      description: Get a user’s profile information. It will return the user object.
+      operationId: getUser
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserInformation'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      tags:
+        - user
+      description: Update a user’s information. It will return the updated user object.
+      operationId: updateUser
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          type: string
+          format: uuid
+        - name: newData
+          in: body
+          description: Update User
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateUser'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserInformation'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - user
+      description: Delete a user’s profile. It will return the deleted user object.
+      operationId: deleteUser
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserInformation'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/users/{userID}/projects':
+    x-swagger-router-controller: user
+    get:
+      tags:
+        - user
+        - project
+      description: >-
+        Get a user’s projects list. It will return the list of project id’s the
+        user is associated with.
+      operationId: getUserProjects
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: userID
+          in: path
+          description: ID of a user
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserProjects'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/projects:
+    x-swagger-router-controller: project
+    get:
+      tags:
+        - project
+      description: Returns list of publicly visible projects
+      operationId: getPublicProjects
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: false
+          description: Bearer token
+        - name: title
+          in: query
+          description: Title of an public project
+          type: string
+        - name: start
+          in: query
+          description: The number of projects to skip. Default 0.
+          required: false
+          type: integer
+        - name: count
+          in: query
+          description: The number of projects returned (at the maximum) Default 20.
+          type: integer
+          required: false
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Project'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - project
+      description: Creates new project for a user
+      operationId: createProject
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: data
+          required: true
+          description: Metadata of the new project
+          in: body
+          schema:
+            $ref: '#/definitions/CreateProject'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ProjectMeta'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}':
+    x-swagger-router-controller: project
+    get:
+      tags:
+        - project
+      description: Returns information about specific project
+      operationId: getProjectInfo
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Project'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      tags:
+        - project
+      description: Updates data of a project
+      operationId: updateProject
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          required: true
+          description: Updated Metadata of the project
+          in: body
+          schema:
+            $ref: '#/definitions/CreateProject'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - project
+      description: Delete specific project
+      operationId: deleteProject
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/collaborators':
+    x-swagger-router-controller: collaborator
+    post:
+      tags:
+        - project
+      description: Add collaborator to project
+      operationId: addCollaborator
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          required: true
+          description: Information about new collaborator
+          in: body
+          schema:
+            $ref: '#/definitions/CollaboratorData'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      tags:
+        - project
+      description: Update collaborator in project
+      operationId: updateCollaborator
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          required: true
+          description: Updated information about collaborator
+          in: body
+          schema:
+            $ref: '#/definitions/CollaboratorData'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - project
+      description: Delete collaborator from project
+      operationId: deleteCollaborator
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          required: true
+          description: Identification of collaborator to remove
+          in: body
+          schema:
+            properties:
+              email:
+                type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/timeline':
+    x-swagger-router-controller: timeline
+    get:
+      tags:
+        - timeline
+        - project
+      description: Returns a list of the tagged states stored in the timeline
+      operationId: getTimeline
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          description: ID of a project
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            properties:
+              states:
+                type: array
+                items:
+                  $ref: '#/definitions/TimelineState'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - timeline
+        - project
+      description: Store the current project state in the timeline
+      operationId: postTimeline
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          description: ID of a project
+          required: true
+          type: string
+          format: uuid
+        - name: tag
+          in: body
+          description: Specifies the tag which is stored together with the project state
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TimelineState'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/timeline/{stateID}':
+    x-swagger-router-controller: timeline
+    get:
+      tags:
+        - timeline
+        - project
+      description: Get the content of a specific tagged timeline state
+      operationId: getTimelineState
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          description: ID of a project
+          required: true
+          type: string
+          format: uuid
+        - name: stateID
+          in: path
+          description: ID of a specific timeline state
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            properties:
+              stateInformation:
+                $ref: '#/definitions/TimelineState'
+              content:
+                $ref: '#/definitions/ProjectContent'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/timeline/{stateID}/restore':
+    x-swagger-router-controller: timeline
+    put:
+      tags:
+        - timeline
+        - project
+      description: >-
+        Restore a project state saved in the timeline (copy it to the current
+        project state)
+      operationId: restoreState
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          description: ID of a project
+          required: true
+          type: string
+          format: uuid
+        - name: stateID
+          in: path
+          description: ID of a specific timeline state
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            properties:
+              stateInformation:
+                $ref: '#/definitions/TimelineState'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Project or State not found
+          schema:
+            $ref: '#/definitions/NotFoundErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/timeline/{stateID}/copy':
+    x-swagger-router-controller: timeline
+    post:
+      tags:
+        - timeline
+        - project
+      description: >-
+        Copy a project state (including all previous timeline states) and create
+        a new project (for the user).
+      operationId: copyState
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          description: ID of a project
+          required: true
+          type: string
+          format: uuid
+        - name: stateID
+          in: path
+          description: ID of a specific timeline state
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          required: true
+          description: Metadata of the new project
+          in: body
+          schema:
+            $ref: '#/definitions/CreateProject'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ProjectMeta'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Project or State not found
+          schema:
+            $ref: '#/definitions/NotFoundErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/canvas/':
+    x-swagger-router-controller: canvas
+    post:
+      tags:
+        - project
+        - canvas
+      description: Create new Canvas
+      operationId: createCanvas
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          required: true
+          in: body
+          description: Data of new Canvas
+          schema:
+            $ref: '#/definitions/UpdateCanvas'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/CanvasMeta'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/canvas/{canvasID}':
+    x-swagger-router-controller: canvas
+    get:
+      tags:
+        - project
+        - canvas
+      description: Gets details of Canvas
+      operationId: readCanvas
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Canvas'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - project
+        - canvas
+      description: Delete Canvas
+      operationId: deleteCanvas
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/canvas/{canvasID}/pdf':
+    x-swagger-router-controller: pdf
+    get:
+      tags:
+        - project
+        - entry
+        - canvas
+        - pdf
+      description: Renders a pdf file and sends it in base64 format
+      operationId: sendPDF
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: false
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: tag
+          in: query
+          required: false
+          type: string
+          format: uuid
+        - name: size
+          in: query
+          default: default
+          type: string
+          enum:
+            - default
+            - A4
+            - A3
+            - A2
+            - A1
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/PdfData'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/canvas/{canvasID}/{buildingBlockType}':
+    x-swagger-router-controller: buildingBlock
+    post:
+      tags:
+        - project
+        - entry
+        - canvas
+      description: Create new entry
+      operationId: createEntry
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: buildingBlockType
+          in: path
+          description: Type of the building block you query (See models)
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          description: Data of the new entry
+          schema:
+            properties:
+              type:
+                type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Entry'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/api/v1/projects/{projectID}/canvas/{canvasID}/{buildingBlockType}/{entryID}':
+    x-swagger-router-controller: buildingBlock
+    get:
+      tags:
+        - project
+        - entry
+        - canvas
+      description: Gets content of entry
+      operationId: readEntry
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: buildingBlockType
+          in: path
+          description: Type of the building block you query. (See models)
+          required: true
+          type: string
+        - name: entryID
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Entry'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      tags:
+        - project
+        - entry
+        - canvas
+      description: Changes content of entry
+      operationId: updateEntry
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: buildingBlockType
+          in: path
+          required: true
+          type: string
+        - name: entryID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: data
+          in: body
+          required: true
+          description: Data of the new entry
+          schema:
+            $ref: '#/definitions/UpdateEntry'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      tags:
+        - project
+        - entry
+        - canvas
+      description: Deletes an entry. And returning its data.
+      operationId: deleteEntry
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Bearer token
+        - name: projectID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: canvasID
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - name: buildingBlockType
+          in: path
+          required: true
+          type: string
+        - name: entryID
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  UpdateUser:
+    properties:
+      password:
+        type: string
+      email:
+        type: string
+  UserInformation:
+    properties:
+      id:
+        type: string
+      email:
+        type: string
+  UserProjects:
+    properties:
+      projects:
+        type: array
+        items:
+          $ref: '#/definitions/ProjectMeta'
+  persistent:
+    properties:
+      canvases:
+        type: array
+        items:
+          $ref: '#/definitions/Canvas'
+  CreateProject:
+    properties:
+      title:
+        type: string
+        default: Untitled
+        description: Title of the project
+      description:
+        description: Description of the project
+        type: string
+      visibility:
+        type: string
+        description: PUBLIC || PRIVATE
+  Project:
+    properties:
+      _id:
+        type: string
+        format: uuid
+      title:
+        type: string
+      visibility:
+        type: string
+        description: visibility tag like PUBLIC or PRIVATE
+      lastEdited:
+        type: integer
+        format: int64
+        description: 'Milliseconds since Unix epoch (Jan 1, 1970)'
+      description:
+        type: string
+      members:
+        type: array
+        items:
+          properties:
+            userID:
+              type: string
+            email:
+              type: string
+            rights:
+              type: string
+              description: READ || EDIT
+      timeline:
+        type: array
+        items:
+          properties:
+            timestamp:
+              type: number
+            tag:
+              type: string
+            value:
+              $ref: '#/definitions/persistent'
+      persistent:
+        $ref: '#/definitions/persistent'
+  ProjectMeta:
+    properties:
+      _id:
+        type: string
+        format: uuid
+      title:
+        type: string
+      visibility:
+        type: string
+        description: PUBLIC || PRIVATE
+      lastEdited:
+        type: integer
+        format: int64
+        description: 'Milliseconds since Unix epoch (Jan 1, 1970)'
+      description:
+        type: string
+      members:
+        type: array
+        items:
+          properties:
+            userID:
+              type: string
+            email:
+              type: string
+            rights:
+              type: string
+  ProjectContent:
+    properties:
+      canvases:
+        type: array
+        items:
+          $ref: '#/definitions/Canvas'
+  TimelineState:
+    properties:
+      id:
+        type: string
+        format: uuid
+      tag:
+        type: string
+      timestamp:
+        type: integer
+        format: int64
+        description: 'Milliseconds since Unix epoch (Jan 1, 1970)'
+  CollaboratorData:
+    properties:
+      email:
+        type: string
+        format: email
+      rights:
+        type: string
+        description: READ || EDIT
+  UpdateEntry:
+    properties:
+      content:
+        description: Content of the new Entry
+        properties:
+          title:
+            type: string
+          text:
+            type: string
+          target:
+            type: string
+          reference:
+            type: string
+  Entry:
+    properties:
+      _id:
+        type: string
+      type:
+        type: string
+      content:
+        $ref: '#/definitions/Content'
+  Content:
+    properties:
+      title:
+        type: string
+      text:
+        type: string
+      reference:
+        type: string
+      target:
+        type: string
+  BuildingBlock:
+    properties:
+      _id:
+        type: string
+        format: uuid
+      title:
+        type: string
+        description: |
+          BuisinessModelCanvas: [
+            KeyPartners,
+            KeyActivities,
+            KeyResources,
+            CustomerRelation,
+            Channels,
+            CustomerSegments,
+            CostStructure,
+            RevenueStreams,
+            ValueProposition
+          ],                                    
+
+          ValuePropositionCanvas: [      
+            ProductsAndServices,
+            GainCreators,
+            PainRelievers,
+            Gains,
+            Pains ,                                
+            CustomerJobs
+          ],                            
+
+          LeanCanvas: [
+            Problem,                                  
+            Solution,                                   
+            KeyMetrics,                                      
+            UniqueValueProposition,                                                   
+            UnfairAdvantages,                                           
+            Channels,                                   
+            CustomerSegments,                                           
+            CostStructure,                                         
+            RevenueStreams
+          ],                                 
+
+          CustomerJourney: [
+            Advertisement,                                        
+            PreSocialMedia,                                              
+            PreWordOfMouth,                                               
+            Expectations,                                       
+            PastExperiences,                                           
+            ServiceJourney,                                          
+            Experiences,                                      
+            RelationshipMenage,                                                  
+            PostSocialMedia,                                               
+            PostWordOfMouth,                                                
+            DisSatisfaction
+          ]
+      buildingBlockType:
+        type: string
+      layoutEntry:
+        properties:
+          _id:
+            type: string
+            format: uuid
+          x:
+            type: number
+          'y':
+            type: number
+          width:
+            type: number
+          height:
+            type: number
+      entries:
+        type: array
+        items:
+          $ref: '#/definitions/Entry'
+  SignUpBody:
+    required:
+      - email
+      - password
+      - passwordRepeat
+      - termsAndConditions
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      passwordRepeat:
+        type: string
+      termsAndConditions:
+        type: boolean
+  SignInBody:
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  UpdateCanvas:
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+  Canvas:
+    properties:
+      _id:
+        type: string
+        format: uuid
+      title:
+        type: string
+      canvasType:
+        type: string
+        description: BUSINESS_MODEL || LEAN || VALUE_PROPOSITION || CUSTOMER_JOURNEY
+      lastEdited:
+        type: integer
+        format: int64
+        description: 'Milliseconds since Unix epoch (Jan 1, 1970)'
+      buildingBlocks:
+        type: array
+        items:
+          $ref: '#/definitions/BuildingBlock'
+  CanvasMeta:
+    properties:
+      _id:
+        type: string
+        format: uuid
+      title:
+        type: string
+      type:
+        type: string
+      lastEdited:
+        type: integer
+        format: int64
+        description: 'Milliseconds since Unix epoch (Jan 1, 1970)'
+  PdfData:
+    properties:
+      pdf:
+        type: string
+        description: contains all data of the rendered pdf in base64 format
+  NotFoundErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        description: Describes which instance could not be found
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  SignInResponse:
+    required:
+      - token
+    properties:
+      token:
+        type: string
+      success:
+        type: boolean
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/UserInformation'

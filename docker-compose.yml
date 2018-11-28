@@ -1,0 +1,43 @@
+version: "3.2"
+
+services:
+
+  app:
+    image: git-st.inf.tu-dresden.de:4567/stgroup/linc/fridolean
+    ports:
+      - published: 3000
+        target: 3000
+        protocol: tcp
+        mode: host
+      - published: 3001
+        target: 3001
+        protocol: tcp
+        mode: host
+      
+    depends_on:
+      - db
+      
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 10s
+    
+    environment:
+      PUBLIC_URL: http://localhost:3000
+      MONGODB_URL: db:27017/loginapp
+      REACT_APP_KEYCLOAK: Y
+      REACT_APP_KC_CLIENT: fridolean
+      REACT_APP_KC_REALM: linc
+      REACT_APP_KC_URL: https://linc.inf.tu-dresden.de/auth
+
+  db:
+    image: "mongo:3.6.1"
+    volumes:
+        - ./data/mongodb:/data/db
+
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 10s

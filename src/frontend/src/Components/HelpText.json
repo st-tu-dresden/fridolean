@@ -1,0 +1,44 @@
+{
+    "//canvastype/Business Model Canvas":{"hover":"BMC-Help"},
+    "//canvastype/Lean Canvas":"LC-Help",
+    "//canvastype/Customer Journey Canvas":"CJC-Help",
+    "//canvastype/Value Proposition Canvas":"VPC-Help",
+    "canvas/BUSINESS_MODEL/Key Partners":{
+        "hover":"1) Wer kommt als Partner in Frage?",
+        "click":"Je nach Geschäftsmodell bietet es sich an, eine strategische Partnerschaft einzugehen, um die Effektivität des Unternehmens zu steigern und Risiken auf mehrere Schultern zu verteilen."
+    },
+    "canvas/BUSINESS_MODEL/Key Activities":{
+        "hover":"2) Welches sind die wichtigsten Tätigkeiten, um dieses Geschäftsmodell in die Tat umzusetzen?",
+        "click":"Um ein Produkt herzustellen oder eine Leistung zu erbringen, sind bestimmte Tätigkeiten notwendig."
+    },
+    "canvas/BUSINESS_MODEL/Key Resources":{
+        "hover":"6) Welche Ressourcen sind unverzichtbar?",
+        "click":"Eine Produktion zu bewerkstelligen und eine Dienstleistung zu erbringen, ist nur mit bestimmten Ressourcen möglich: Betriebsstätte, Personal, Startkapital usw."
+    },
+    "canvas/BUSINESS_MODEL/Value Propositions":{
+        "hover":"3) Welchen Nutzen haben die Kunden, wenn sie das Produkt oder die Dienstleistung kaufen?",
+        "click":"Jedes Produkt und jede Leistung hat eine Aufgabe: ein Problem des Kunden zu lösen oder ein Bedürfnis zu befriedigen. Jedes Produkt und jede Leistung muss dieses Nutzenversprechen enthalten: neuer, besser, stylischer, günstiger oder einfach nutzerfreundlicher als vergleichbare Angebote zu sein."
+    },
+    "canvas/BUSINESS_MODEL/Customer Relationships":{
+        "hover":"4) Wie können die in Frage kommenden Kunden gewonnen und gebunden werden?",
+        "click":"Kunden können persönlich bedient werden. Sie können auch von Sprachautomaten oder Internet-Software von einer Frage zu einer möglichen Antwort geführt werden. Wie man die Kundenbeziehung gestaltet, ist ein wichtiger Bestandteil des jeweiligen Geschäftsmodells."
+    },
+    "canvas/BUSINESS_MODEL/Channels":{
+        "hover":"7) Wie erfahren Kunden von dem Angebot? Wie muss der Vertrieb aussehen?",
+        "click":"Kunden kaufen nur, was sie kennen. Und das, was für sie erreichbar und verfügbar ist."
+    },
+    "canvas/BUSINESS_MODEL/Customer Segments":{
+        "hover":"5) Welches ist die Kunden-Zielgruppe?",
+        "click":"Jedes Start-up will ein Produkt oder eine Dienstleistung verkaufen. Als Kunden kommen je nachdem verschiedene Kunden-Arten in Frage: die Masse, einen Nische, diverse Kunden-Segmente."
+    },
+    "canvas/BUSINESS_MODEL/Cost Structure":{
+        "hover":"8) Welches sind die wichtigsten Ausgaben, ohne die das Geschäftsmodell nicht funktionieren würde?",
+        "click":" Jede Produktion und jede Dienstleistung ist mit Kosten verbunden. Sie fallen vor allem für die Aktivitäten, die Ressourcen und für Partner an."
+    },
+    "canvas/BUSINESS_MODEL/Revenue Streams":{
+        "hover":"9) Woher kommt bei diesem Geschäftsmodell das Geld?",
+        "click":"Es gibt oft mehrere Wege, mit demselben Angebot Geld zu verdienen. Einmalzahlungen bringen schnell Geld in die Kasse. Abonnenten versprechen dagegen kontinuierliche Einkünfte über längere Zeit."
+    },
+    "//canvas/source":"https://www.existenzgruender.de/DE/Gruendung-vorbereiten/Businessplan/Business-Model-Canvas/inhalt.html"
+    
+}

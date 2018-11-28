@@ -1,0 +1,22 @@
+{
+    "BUSINESS_MODEL":{
+        "default":"bmc_A4.pdf",
+        "A4":"bmc_A4.pdf",
+        "A3":"bmc_A3.pdf"
+    },
+    "VALUE_PROPOSITION":{
+        "default":"vpc_A4.pdf",
+        "A4":"vpc_A4.pdf",
+        "A3":"vpc_A3.pdf"
+    },
+    "LEAN":{
+        "default":"lc_A4.pdf",
+        "A4":"lc_A4.pdf",
+        "A3":"lc_A3.pdf"
+    },
+    "CUSTOMER_JOURNEY":{
+        "default":"cjc_A4.pdf",
+        "A4":"cjc_A4.pdf",
+        "A3":"cjc_A3.pdf"
+    }
+}

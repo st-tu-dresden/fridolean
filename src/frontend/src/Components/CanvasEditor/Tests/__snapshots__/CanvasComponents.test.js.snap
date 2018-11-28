@@ -1,0 +1,250 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostIt should display the expected state 1`] = `
+<span
+  draggable="true"
+  onDragStart={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  <span
+    className="tagbar"
+  >
+    <svg
+      cursor="pointer"
+      height={20}
+      onClick={[Function]}
+      preserveAspectRatio="xMinYMin"
+      width="8"
+    />
+  </span>
+  <textarea
+    className="textarea"
+    disabled={false}
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onInput={[Function]}
+    onKeyDown={[Function]}
+    rows="1"
+    style={
+      Object {
+        "resize": "none",
+      }
+    }
+    value="text"
+  />
+</span>
+`;
+
+exports[`PostIt should display the expected state 2`] = `
+<span
+  draggable="true"
+  onDragStart={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  <span
+    className="tagbar"
+  >
+    <svg
+      cursor="pointer"
+      height={20}
+      onClick={[Function]}
+      preserveAspectRatio="xMinYMin"
+      width="8"
+    />
+  </span>
+  <textarea
+    className="textarea"
+    disabled={true}
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onInput={[Function]}
+    onKeyDown={[Function]}
+    rows="1"
+    style={
+      Object {
+        "resize": "none",
+      }
+    }
+    value="text"
+  />
+</span>
+`;
+
+exports[`PostIt should display the expected state 3`] = `
+<span
+  draggable="true"
+  onDragStart={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  <span
+    className="tagbar"
+  >
+    <svg
+      cursor="pointer"
+      height={20}
+      onClick={[Function]}
+      preserveAspectRatio="xMinYMin"
+      width="8"
+    />
+  </span>
+  <textarea
+    className="textarea"
+    disabled={true}
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onInput={[Function]}
+    onKeyDown={[Function]}
+    rows="1"
+    style={
+      Object {
+        "resize": "none",
+      }
+    }
+    value="other text"
+  />
+</span>
+`;
+
+exports[`TargIt should display the expected state 1`] = `
+<div
+  className="x-postit"
+  style={
+    Object {
+      "borderColor": "#ffcc66",
+    }
+  }
+>
+  <span
+    draggable="true"
+    onDragStart={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+  >
+    <span
+      className="tagbar"
+    >
+      <svg
+        cursor="pointer"
+        height={20}
+        onClick={[Function]}
+        preserveAspectRatio="xMinYMin"
+        width="8"
+      />
+    </span>
+    <textarea
+      className="textarea"
+      disabled={false}
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onInput={[Function]}
+      onKeyDown={[Function]}
+      rows="1"
+      style={
+        Object {
+          "resize": "none",
+        }
+      }
+      value="text"
+    />
+  </span>
+</div>
+`;
+
+exports[`TargIt should display the expected state 2`] = `
+<div
+  className="x-postit"
+  style={
+    Object {
+      "borderColor": "#ffaaaa",
+    }
+  }
+>
+  <span
+    draggable="true"
+    onDragStart={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+  >
+    <span
+      className="tagbar"
+    >
+      <svg
+        cursor="pointer"
+        height={20}
+        onClick={[Function]}
+        preserveAspectRatio="xMinYMin"
+        width="8"
+      />
+    </span>
+    <textarea
+      className="textarea"
+      disabled={true}
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onInput={[Function]}
+      onKeyDown={[Function]}
+      rows="1"
+      style={
+        Object {
+          "resize": "none",
+        }
+      }
+      value="text"
+    />
+  </span>
+</div>
+`;
+
+exports[`TargIt should display the expected state 3`] = `
+<div
+  className="x-postit"
+  style={
+    Object {
+      "borderColor": "#00ff4a",
+    }
+  }
+>
+  <span
+    draggable="true"
+    onDragStart={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+  >
+    <span
+      className="tagbar"
+    >
+      <svg
+        cursor="pointer"
+        height={20}
+        onClick={[Function]}
+        preserveAspectRatio="xMinYMin"
+        width="8"
+      />
+    </span>
+    <textarea
+      className="textarea"
+      disabled={false}
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onInput={[Function]}
+      onKeyDown={[Function]}
+      rows="1"
+      style={
+        Object {
+          "resize": "none",
+        }
+      }
+      value="other text"
+    />
+  </span>
+</div>
+`;

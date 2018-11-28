@@ -1,0 +1,72 @@
+{
+    "BUSINESS_MODEL": {
+        "view":"Business Model Canvas",
+        "blocks":[
+            "Key Partners",
+            "Key Activities",
+            "Key Resources",
+            "Customer Relationships",
+            "Channels",
+            {"title": "Customer Segments", "buildingBlockType": "target"},
+            "Cost Structure",
+            "Revenue Streams",
+            {"title": "Value Propositions", "buildingBlockType": "link"}
+        ]
+    },
+    "VALUE_PROPOSITION": {
+        "view":"Value Proposition Canvas",
+        "blocks":[
+            "Products & Services",
+            "Gain Creators",
+            "Pain Relievers",
+            "Gains",
+            "Pains",
+            "Customer Job(s)"
+        ]
+    },
+    "LEAN": {
+        "view":"Lean Canvas",
+        "blocks":[
+            "Problem",
+            "Solution",
+            "Key Metrics",
+            "Unique Value Proposition",
+            "Unfair Advantage",
+            "Channels",
+            "Customer Segment",
+            "Cost Structure",
+            "Revenue Streams"
+        ]
+    },
+    "CUSTOMER_JOURNEY": {
+        "view":"Customer Journey Canvas",
+        "blocks":[
+            "Advertisement",
+            "(Pre-) Social Media",
+            "(Pre-) Word-of-Mouth",
+            "Past Experiences",
+            "Expactations",
+            "Service Journey",
+            "Experiences",
+            "Relationship Management",
+            "(Post-) Social Media",
+            "(Post-) Word-of-Mouth",
+            "(Dis)Satisfaction"
+        ]
+    },
+    "SPIN":{
+        "view":"Spin Canvas",
+        "blocks":[
+            "Situation Questions",
+            "Problem Questions",
+            "Implicit Needs",
+            "Implication Questions",
+            "Pain-Gain Questions",
+            "Explicit Needs",
+            "Benefits",
+            "Advantages",
+            "Objections",
+            "Features"
+        ]
+    }
+}

@@ -1,0 +1,443 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BuildBlock should display the expected state 1`] = `
+<div
+  className="ui segment"
+  onDragOver={[Function]}
+  onDrop={[Function]}
+>
+  <div>
+    <span>
+      <h3>
+        Key Partners
+           
+      </h3>
+    </span>
+    <div>
+      <div>
+        <div
+          className="row"
+        >
+          <div
+            className="col-md-12 col-sm-12 col-xs-12 editable-column"
+          >
+            <div
+              className="add-widget-button"
+              onClick={[Function]}
+            >
+              <span
+                className="add-widget-link"
+              >
+                +
+              </span>
+            </div>
+            <div>
+              <div
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <div
+                  className="defaultWidgetFrame"
+                >
+                  <div
+                    className="defaultWidgetFrameHeader"
+                  >
+                    <span
+                      className="title"
+                    >
+                      Entry
+                    </span>
+                    <span
+                      className="remove"
+                      onClick={[Function]}
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="remove icon removeIcon"
+                      />
+                    </span>
+                  </div>
+                  <span
+                    draggable="true"
+                    onDragOver={[Function]}
+                    onDragStart={[Function]}
+                    onDrop={[Function]}
+                    onMouseEnter={[Function]}
+                    onMouseLeave={[Function]}
+                  >
+                    <span
+                      className="tagbar"
+                    >
+                      <svg
+                        cursor="pointer"
+                        height={20}
+                        onClick={[Function]}
+                        preserveAspectRatio="xMinYMin"
+                        width="8"
+                      />
+                    </span>
+                    <textarea
+                      className="textarea"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      onKeyDown={[Function]}
+                      rows="1"
+                      style={
+                        Object {
+                          "resize": "none",
+                        }
+                      }
+                      value="eergresf"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BuildBlock should display the expected state 2`] = `
+<div
+  className="ui segment"
+  onDragOver={[Function]}
+  onDrop={[Function]}
+>
+  <div>
+    <span>
+      <h3>
+        Customer Relationships
+           
+      </h3>
+    </span>
+    <div>
+      <div>
+        <div
+          className="row"
+        >
+          <div
+            className="col-md-12 col-sm-12 col-xs-12 editable-column"
+          >
+            <div
+              className="add-widget-button"
+              onClick={[Function]}
+            >
+              <span
+                className="add-widget-link"
+              >
+                +
+              </span>
+            </div>
+            <div>
+              <div
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <div
+                  className="defaultWidgetFrame"
+                >
+                  <div
+                    className="defaultWidgetFrameHeader"
+                  >
+                    <span
+                      className="title"
+                    >
+                      Entry
+                    </span>
+                    <span
+                      className="remove"
+                      onClick={[Function]}
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="remove icon removeIcon"
+                      />
+                    </span>
+                  </div>
+                  <span
+                    draggable="true"
+                    onDragOver={[Function]}
+                    onDragStart={[Function]}
+                    onDrop={[Function]}
+                    onMouseEnter={[Function]}
+                    onMouseLeave={[Function]}
+                  >
+                    <span
+                      className="tagbar"
+                    >
+                      <svg
+                        cursor="pointer"
+                        height={20}
+                        onClick={[Function]}
+                        preserveAspectRatio="xMinYMin"
+                        width="8"
+                      />
+                    </span>
+                    <textarea
+                      className="textarea"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      onKeyDown={[Function]}
+                      rows="1"
+                      style={
+                        Object {
+                          "resize": "none",
+                        }
+                      }
+                      value="eergresf"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <div
+                  className="defaultWidgetFrame"
+                >
+                  <div
+                    className="defaultWidgetFrameHeader"
+                  >
+                    <span
+                      className="title"
+                    >
+                      Entry
+                    </span>
+                    <span
+                      className="remove"
+                      onClick={[Function]}
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="remove icon removeIcon"
+                      />
+                    </span>
+                  </div>
+                  <span
+                    draggable="true"
+                    onDragOver={[Function]}
+                    onDragStart={[Function]}
+                    onDrop={[Function]}
+                    onMouseEnter={[Function]}
+                    onMouseLeave={[Function]}
+                  >
+                    <span
+                      className="tagbar"
+                    >
+                      <svg
+                        cursor="pointer"
+                        height={20}
+                        onClick={[Function]}
+                        preserveAspectRatio="xMinYMin"
+                        width="8"
+                      />
+                    </span>
+                    <textarea
+                      className="textarea"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      onKeyDown={[Function]}
+                      rows="1"
+                      style={
+                        Object {
+                          "resize": "none",
+                        }
+                      }
+                      value="frgersdg"
+                    />
+                  </span>
+                </div>
+              </div>
+              <div
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <div
+                  className="defaultWidgetFrame"
+                >
+                  <div
+                    className="defaultWidgetFrameHeader"
+                  >
+                    <span
+                      className="title"
+                    >
+                      Entry
+                    </span>
+                    <span
+                      className="remove"
+                      onClick={[Function]}
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="remove icon removeIcon"
+                      />
+                    </span>
+                  </div>
+                  <span
+                    draggable="true"
+                    onDragOver={[Function]}
+                    onDragStart={[Function]}
+                    onDrop={[Function]}
+                    onMouseEnter={[Function]}
+                    onMouseLeave={[Function]}
+                  >
+                    <span
+                      className="tagbar"
+                    >
+                      <svg
+                        cursor="pointer"
+                        height={20}
+                        onClick={[Function]}
+                        preserveAspectRatio="xMinYMin"
+                        width="8"
+                      />
+                    </span>
+                    <textarea
+                      className="textarea"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onInput={[Function]}
+                      onKeyDown={[Function]}
+                      rows="1"
+                      style={
+                        Object {
+                          "resize": "none",
+                        }
+                      }
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BuildBlock should display the expected state 3`] = `
+<div
+  className="ui segment"
+  onDragOver={[Function]}
+  onDrop={[Function]}
+>
+  <div>
+    <span>
+      <h3>
+        Customer Segments
+           
+      </h3>
+    </span>
+    <div>
+      <div>
+        <div
+          className="row"
+        >
+          <div
+            className="col-md-12 col-sm-12 col-xs-12"
+          >
+            <div>
+              <div
+                style={
+                  Object {
+                    "opacity": 1,
+                  }
+                }
+              >
+                <div
+                  className="defaultWidgetFrame"
+                >
+                  <div
+                    className="defaultWidgetFrameHeader"
+                  >
+                    <span
+                      className="title"
+                    >
+                      Entry
+                    </span>
+                  </div>
+                  <div
+                    className="x-postit"
+                    style={
+                      Object {
+                        "borderColor": "#a9d62c",
+                      }
+                    }
+                  >
+                    <span
+                      draggable="true"
+                      onDragOver={[Function]}
+                      onDragStart={[Function]}
+                      onDrop={[Function]}
+                      onMouseEnter={[Function]}
+                      onMouseLeave={[Function]}
+                    >
+                      <span
+                        className="tagbar"
+                      >
+                        <svg
+                          cursor="pointer"
+                          height={20}
+                          onClick={[Function]}
+                          preserveAspectRatio="xMinYMin"
+                          width="8"
+                        />
+                      </span>
+                      <textarea
+                        className="textarea"
+                        disabled={false}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        rows="1"
+                        style={
+                          Object {
+                            "resize": "none",
+                          }
+                        }
+                        value="fgergs"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

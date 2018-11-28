@@ -1,0 +1,33 @@
+.textarea{
+  width: calc(100% - 30px);
+  margin-bottom: 0px;
+}
+
+.markdownnote{
+  max-width: calc(100% - 30px);
+  margin-left: 12px;
+  min-height: 15px;
+}
+
+.tagbar{
+  float:left;
+  margin-right: 3px;
+}
+
+.tagbar :hover{
+  border-style:solid;
+  border-color:black;
+  border-width: 1px;
+}
+
+.link-button{
+  float: left;
+  margin-top: 10px;
+  height: auto;
+  width: calc(100%);
+}
+
+.x-postit{
+  border-left: 8px solid;
+  padding-left: 3px;
+}

@@ -1,0 +1,146 @@
+.defaultWidgetFrame {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-bottom: 5px;
+	padding: 3px 5px;
+	display: inline-block;
+	background: #fff;
+	border: 0px solid #999999;
+}
+
+.defaultWidgetFrameHeader {
+	border-bottom: 0px solid #E6E9ED;
+	padding: 0px 0px 0px;
+	margin-bottom: 0px;
+	height: 0px;
+}
+
+.defaultWidgetFrameHeader .title {
+	font-size: 0px;
+  float: left;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.defaultWidgetFrameHeader .remove {
+	float: right;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	font-size: 10px;
+	background-image: url(./res/delete.svg);
+	cursor: pointer;
+	text-decoration: none;
+	margin-top: 1px;
+}
+
+.add-widget-button {
+	padding: 0px;
+	text-align: center;
+	border: 1px solid #DCDCDC;
+	margin-bottom: 5px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.add-widget-link {
+	text-decoration: none;
+}
+
+.editable-column {
+	border: 0px solid #8C8080;
+	padding: 0px;
+}
+
+.droppable-column {
+	background-color: #E7E7E7;
+}
+
+.removeIcon {
+	width: 10px;
+}
+
+.vpc-cs-column {
+	padding-right: 0px !important;
+}
+
+.vpc-cs-segment {
+	border-style: none !important;
+	box-shadow: none !important;
+	background-image: url(./res/cs_circle.svg) !important;
+	background-size: cover !important;
+}
+
+.vpc-segment-heading {
+	width: 55%;
+}
+
+.vpc-vp-column {
+	padding-right: 0px !important;
+	overflow: auto;
+	width: 200px !important;
+}
+
+.vpc-vp-segment {
+	border-style: none !important;
+	background-image: url(./res/vp_quad.svg) !important;
+	background-size: cover !important;
+	box-shadow: none !important;
+	overflow: auto;
+}
+
+.vpc-cell {
+	background-color: rgba(255,0,0,0.0) !important;
+	border-style: none !important;
+	box-shadow: none !important;
+	overflow: auto;
+}
+
+.vpc-cell-bottom {
+	background-color: rgba(255,0,0,0.0) !important;
+	border-style: none !important;
+	box-shadow: none !important;
+	overflow: auto;
+	margin-top: 20% !important;
+}
+
+.headline-segment{
+	max-height: 70px;
+}
+
+.small-segment{
+	max-height: 312px;
+	overflow: auto;
+}
+
+.double-segment{
+	max-height: 652px;
+	overflow: auto;
+}
+
+.quart-segment{
+	max-height: 225px;
+	overflow: auto;
+}
+
+.third-segment{
+	max-height: 310px;
+	overflow: auto;
+}
+
+.oneth-segment{
+	max-height: 982px;
+	overflow: auto;
+}
+
+.div.column.vpc-vp-column{
+	width: 200px !important;
+}
+
+.canvas-title-segment {
+	margin-left: 15px !important;
+	border-style: none !important;
+	box-shadow: none !important;
+}

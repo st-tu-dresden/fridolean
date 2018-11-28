@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  /* body-background could be visible on very short pages */
+  background-color: #1b1c1d;
+}
+/* in explore/project overview */
+.ui.fluid.card .content {
+  overflow: hidden;
+}
+/* in explore/project overview */
+.ui.fluid.card .content img {
+  max-width: 100%;
+}
+/* when viewing a single project - TODO add some proper classes to the html otherwise the styling is too generic*/
+.four.wide.column .padded.segment img {
+  max-width: 100%;
+}
+.markdownnote img {
+  max-width: 100%;
+}

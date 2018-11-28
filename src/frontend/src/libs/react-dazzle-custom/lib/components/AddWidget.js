@@ -1,0 +1,32 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+/**
+ * Default AddWidget component.
+ * @param  {[type]} {text    [description]
+ * @param  {[type]} onClick} [description]
+ * @return {[type]}          [description]
+ */
+const AddWidget = ({ text, onClick }) => (
+  <div className="add-widget-button" onClick={onClick}>
+    <span className="add-widget-link">{text}</span>
+  </div>
+);
+
+AddWidget.propTypes = {
+  /**
+   * Should be called when 'add' is clicked
+   */
+  onClick: PropTypes.func,
+
+  /**
+   * Text that should be displyed in the component
+   */
+  text: PropTypes.string,
+};
+
+AddWidget.defaultProps = {
+  text: '+'
+};
+
+export default AddWidget;

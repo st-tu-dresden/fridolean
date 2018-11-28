@@ -1,0 +1,4 @@
+{
+    "dbUri": "localhost:27017/loginapp", 
+    "jwtSecret": "a secret phrase"
+}
