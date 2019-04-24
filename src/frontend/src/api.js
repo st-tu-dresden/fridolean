@@ -14,7 +14,7 @@ export function setCurrentUser(token) {
 /**
  * Wrapper around fetch-requests to our API;
  * Automatically appends /api/v1 to URL, includes Beader-Token & Content-Type
- * 
+ *
  * @param {String} method - HTTP Request method, e.g. "GET", "POST", "DELETE", ...
  * @param {String} url - URL of fetch-request
  * @param {*} [init] - RequestInit
@@ -47,6 +47,7 @@ export const fetchAPI = (method, url, init) => {
     if(method){
         init={...init,method};
     }
+
 
     console.log("|> API Request: ", targetURL, init);
 

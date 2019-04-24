@@ -5,24 +5,19 @@ ENV NODE_ENV production
 # GENERATE_SOURCEMAP https://github.com/facebook/create-react-app/issues/2763#issuecomment-322673465
 ENV GENERATE_SOURCEMAP true
 
-RUN yarn global add swagger@0.7.x -T
-# RUN yarn global add serve@9.4.x -T
-
-COPY yarn.lock package.json /frontend/
+COPY package-lock.json package.json /frontend/
 WORKDIR /frontend/
-RUN yarn install
+RUN npm install
 
 COPY . /frontend
 
 RUN eval $(docker/reset_env.sh) \
-    && yarn build
-
-
+    && npm run-script build
 
 FROM nginx:1.15
 
 RUN apt-get update && \
-        apt-get --yes install file pdftk && \
+        apt-get --yes install file && \
         apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV PUBLIC_URL http://localhost:3000
@@ -42,7 +37,6 @@ WORKDIR /frontend
 # Copy the default nginx.conf provided by tiangolo/node-frontend
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-
-EXPOSE 3000
+EXPOSE 80
 
 ENTRYPOINT ["/bin/bash", "/frontend/docker/entrypoint.sh"]

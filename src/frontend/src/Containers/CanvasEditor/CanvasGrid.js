@@ -2,20 +2,29 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Grid, Segment, Icon } from 'semantic-ui-react';
+import { Grid, Segment, Icon, Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import './style.css';
 
 import BuildBlock from "./BuildBlock";
 
 import windowSize from 'react-window-size';
+// import {enable, disable} from "../../features/bgColor/index";
+import {featureList} from "../../features/index.js";
+import {getCanvasGrid} from "../../features/helper";
+import {FeatureSetting} from "../../Views/ProjectSubview/components/FeatureSetting.js";
+import $ from 'jquery';
+
+import { CanvasTagSelector /*knownTagColors*/ } from '../../Components/Settings/CanvasTagSelector';
+import { changeCanvasTags, createTag } from './actions'
+import RandomColor from 'randomcolor';
 
 /**
  * CanvasGrid
  * @class CanvasGrid : react.component - the shown canvas
  */
-class CanvasGrid extends Component {
 
+class CanvasGrid extends Component {
   /**
    * required props and tehir types
    */
@@ -41,7 +50,11 @@ class CanvasGrid extends Component {
    */
   constructor(props) {
     super(props);
-    this.state = { actions: {}, printing: false }
+    this.state = {
+      actions: {},
+      draggedTagId: {},
+      helperState: true,
+    };
 
     this.state.actions.addEntryCanvas = this.props.addEntryCanvas;
     this.state.actions.onAddEntry = this.props.onAddEntry;
@@ -49,26 +62,87 @@ class CanvasGrid extends Component {
     this.state.actions.onChangeEntry = this.props.onChangeEntry;
     this.state.actions.onReferenceCall = this.props.onReferenceCall;
 
-    this.printListener = this.printListener.bind(this)
+    this.featureManager = this.featureManager.bind(this);
   }
 
-  printListener(evt) {
-    this.setState({ ...this.state || {}, printing: evt.matches });
+
+  featureManager() {
+    let config = $.parseXML(this.props.canvases[this.props.canvasid].configuration);
+    console.log("config:", config);
+    if (config != null) {
+      $(config).find("feature").each((i, attr) => {
+        let feature = $(attr);
+        if(feature.attr("manual") !== "undefined") {
+          console.log(feature.attr("name"));
+        }
+      });
+    }
   }
 
   componentDidMount() {
     window.matchMedia("print").addListener(this.printListener);
+    getCanvasGrid(this);
   }
 
   componentWillUnmount() {
     window.matchMedia("print").removeListener(this.printListener);
   }
 
-  buildTitle(parent = "") {
+  handleDescriptionChange(event) {
+    this.props.onChangeDescription(event.target.value);
+  }
 
+  onTagsChange(tags) {
+                console.log("ASD123");
+    // let canvas = this.getCanvas();
+    let newTags = tags.filter(tag => this.props.canvasTag.indexOf(tag) < 0);
+    let delTags = this.props.canvasTag.filter(tag => tags.indexOf(tag) < 0);
+    this.props.dispatch(changeCanvasTags(this.props.canvasid, newTags, delTags));
+  }
+
+  createTag(title) {
+    this.props.dispatch(createTag(title, RandomColor(), undefined, [this.props.canvasid]));
+  }
+
+  onOpenTag(tag) {
+    this.props.openSettings({ tag });
+  }
+
+  onTagDrag(newTag){
+    this.setState({draggedTagId: newTag});
+  }
+
+  loadFeatures() {
+    var featureKeys = Object.keys(featureList);
+    var html = [];
+    featureKeys.forEach((key) => {
+      let featureName = key;
+      let label = featureList[key].name;
+      var feature = require("../../features/" + featureName + "/index");
+      if ("onMoveEntry" in feature) {
+        featureList[key].onMoveEntry = feature.onMoveEntry;
+      }
+      if ("onAddEntryBefore" in feature) {
+        featureList[key].onAddEntryAfter = feature.onAddEntryAfter;
+      }
+      html.push(
+        <div key={featureName}>
+          <Checkbox
+          label={label}
+          toggle
+          defaultChecked={featureList[key].enabled}
+          onChange={feature.toggle}
+          />
+        </div>
+      );
+    });
+    return html;
+  }
+
+  buildTitle(parent = "") {
     return (
       <Segment className="canvas-title-segment">
-        {this.state.printing ? <h3>{this.props.title}</h3> : <h1>
+        <h1>
           <Icon name="setting" link onClick={()=>this.props.openSettings({canvas:this.props.canvasid})}/>
           <a href={"/projects/" + this.props.project_id + (this.props.tagID ? "?tag=" + this.props.tagID : "")}>
             <Icon name="home" />
@@ -79,16 +153,43 @@ class CanvasGrid extends Component {
               <Icon name="external square" />
             </a> : ""}
           {this.props.title}
-        </h1>}
+          &emsp;
+          {/*this.featureManager()*/}
+          <FeatureSetting parentObj={this} access="post"/>
+          &emsp;
+          <span>
+            <font size = "4">
+              Description:
+            <input
+              style={{borderWidth: 1}}
+              disabled={this.props.readonly}
+              defaultValue={this.props.description}
+              value={this.state.description}
+              onChange={this.handleDescriptionChange.bind(this)} />
+            </font>
+          </span>
+        </h1>
+        <div className="canvas-title-tagSelector">
+          <CanvasTagSelector globalTags={this.props.globalTags}
+                     localTags={this.props.canvasTag}
+                     onChange={this.onTagsChange.bind(this)}
+                     onCreateTag={this.createTag.bind(this)}
+                     onOpenTag={this.onOpenTag.bind(this)}
+                     onTagDrag={this.onTagDrag.bind(this)}
+                     draggedTagId = {this.state.draggedTagId}
+          />
+        </div>
       </Segment>)
   }
 
   buildBlock(name, className, style = {minHeight:"150px"}) {
     return (<BuildBlock
-      help={`canvas/${this.props.type}/${name}`}
+      help={(this.state.helperState) ? `canvas/${this.props.type}/${name}` : ""}
       block={this.findBuildingBlock(name, this.props.buildingBlocks)}
       className={className}
+      type={this.props.type}
       style={style}
+      draggedTagId = {this.state.draggedTagId}
       lockings={this.props.lockings}
       editable={this.props.editable}
       project_id={this.props.project_id}
@@ -99,17 +200,19 @@ class CanvasGrid extends Component {
       onChangeAdd={this.props.onChangeAdd}
       openSettings={this.props.openSettings}
       globalTags={this.props.globalTags}
-      enableMarkdown={this.props.canvases[this.props.canvasid].options.enableMarkdown}>
+      enableMarkdown={this.props.canvases[this.props.canvasid].options.enableMarkdown}
+      dispatch={this.props.dispatch}>
     </BuildBlock>)
   }
 
   buildLinkBlock(name, linkName, className, style={}){
     return(
       <BuildBlock
-      help={`canvas/${this.props.type}/${name}`}
+      help={(this.state.helperState) ? `canvas/${this.props.type}/${name}` : ""}
       block={this.findBuildingBlock(name, this.props.buildingBlocks)}
       refblock={this.findBuildingBlock(linkName, this.props.buildingBlocks)}
       className={className}
+      type={this.props.type}
       style={style}
       lockings={this.props.lockings}
       mode={this.props.mode}
@@ -133,7 +236,9 @@ class CanvasGrid extends Component {
    */
   buildBusinessModelCanvas() {
     return (
-      <Grid stackable style={this.state.printing ? {} : { 'paddingTop': 50, 'paddingBottom': 20 }} columns={5}>
+      <div>
+
+      <Grid stackable style={{'paddingTop': 50, 'paddingBottom': 20 }} columns={5}>
         <Grid.Row stretched>
           {this.buildTitle()}
         </Grid.Row>
@@ -147,7 +252,7 @@ class CanvasGrid extends Component {
           </Grid.Column>
           <Grid.Column>
             {
-              this.buildLinkBlock("Value Propositions","Customer Segments", "double-segment")
+              this.buildBlock("Value Propositions", "double-segment")
               /*
             <BuildBlock
               block={this.findBuildingBlock("Value Propositions", this.props.buildingBlocks)}
@@ -179,8 +284,10 @@ class CanvasGrid extends Component {
           </Grid.Column>
           </Grid.Row>
       </Grid>
+      </div>
     );
   }
+
 
   /**
    * generate a ValuePropositionCanvas layout
@@ -257,12 +364,16 @@ class CanvasGrid extends Component {
 
     Object.values(this.props.canvases).forEach((canvas, index) => {
       if (canvas.canvasType === "BUSINESS_MODEL") {
+        // console.log('businessmodel')
         let vpblock = this.findBuildingBlock("Value Propositions", canvas.buildingBlocks)
+        
         Object.values(vpblock.entries).forEach((entry, index) => {
           if (entry.content.reference === this.props.canvasid) {
             bmcid = "?id=" + canvas._id;
+            console.log('bmcid:' + bmcid);
             if (this.props.mode === 'HISTORY') {
               bmcid += '&tag=' + this.props.tagID;
+              console.log('bmcid:' + bmcid);
             }
           }
         });
@@ -274,9 +385,10 @@ class CanvasGrid extends Component {
     //}
 
     return (
-      <Grid stackable style={this.state.printing ? {} : { 'paddingTop': 50, 'paddingBottom': 20 }} columns='equal' className="vpc">
-        <Grid.Row stretched>
-          {this.buildTitle("businessmodel" + bmcid)}
+      <Grid stackable style={{ 'paddingTop': 50, 'paddingBottom': 20 }} columns='equal' className="vpc">
+        <Grid.Row stretched >
+          {bmcid ? 
+            this.buildTitle("businessmodel" + bmcid): this.buildTitle()}
         </Grid.Row>
         <Grid.Row className={"vpc-content-row" + m} >
           <Grid.Column className={"vpc-vp-column" + m} width={7}>
@@ -326,7 +438,7 @@ class CanvasGrid extends Component {
    */
   buildCustomerJourneyCanvas() {
     return (
-      <Grid stackable style={this.state.printing ? {} : { 'paddingTop': 50, 'paddingBottom': 20 }} columns='equal'>
+      <Grid stackable style={{ 'paddingTop': 50, 'paddingBottom': 20 }} columns='equal'>
         <Grid.Row stretched>
           {this.buildTitle()}
         </Grid.Row>
@@ -375,7 +487,7 @@ class CanvasGrid extends Component {
   */
   buildLeanCanvas() {
     return (
-      <Grid stackable style={this.state.printing ? {} : { 'paddingTop': 50, 'paddingBottom': 20 }} columns={5}>
+      <Grid stackable style={{ 'paddingTop': 50, 'paddingBottom': 20 }} columns={5}>
         <Grid.Row stretched>
           {this.buildTitle()}
         </Grid.Row>
@@ -412,7 +524,7 @@ class CanvasGrid extends Component {
 
   buildSpinCanvas(){
     return (
-      <Grid stackable style={this.state.printing ? {} : {'paddingTop': 50, 'paddingBottom': 20 }} columns='equal'>
+      <Grid stackable style={{'paddingTop': 50, 'paddingBottom': 20 }} columns='equal'>
         <Grid.Row stretched>
           {this.buildTitle()}
         </Grid.Row>
@@ -466,6 +578,30 @@ class CanvasGrid extends Component {
     );
   }
 
+
+
+  buildPostcardCanvas(){
+    return (
+      <Grid stackable style={{'paddingTop': 50, 'paddingBottom': 20}} columns='equal'>
+        <Grid.Row stretched>
+          {this.buildTitle()}
+        </Grid.Row>
+        <Grid.Row stretched>
+
+          <Grid.Column>
+            <Grid stackable>
+              <Grid.Row stretched columns={1}>
+                <Grid.Column>
+                  {this.buildBlock("Letter to Grandma","postcard", { height:400})}
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
+  }
+
   /**
    * findBuildingBlock (by title)
    * @param {*} title - title of requested BuildBlock
@@ -480,6 +616,7 @@ class CanvasGrid extends Component {
    * display the requested view
    */
   render() {
+    
     switch (this.props.type) {
       case "BUSINESS_MODEL":
         return this.buildBusinessModelCanvas();
@@ -491,6 +628,8 @@ class CanvasGrid extends Component {
         return this.buildLeanCanvas();
       case "SPIN":
         return this.buildSpinCanvas();
+      case "POSTCARD":
+        return this.buildPostcardCanvas();
       default:
         return (
           <div style={{paddingTop:50,paddingBottom:20}}>Received wrong canvas type ({this.props.type})</div>

@@ -31,18 +31,18 @@ To our knowledge it is the first open source tool in this area.
 
 ## Installation
 
-Prerequisites: mongodb, yarn
+Prerequisites: mongodb, npm
 
 ```
 cd src/frontend
-yarn install
-yarn start
+npm install
+npm start
 ```
 
 ```
 cd src/backend
-yarn install
-yarn start
+npm install
+npm start
 ```
 
 ### Docker

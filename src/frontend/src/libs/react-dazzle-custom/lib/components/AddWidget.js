@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  * @param  {[type]} onClick} [description]
  * @return {[type]}          [description]
  */
-const AddWidget = ({ text, onClick }) => (
+const AddWidget = ({ text, onClick}) => (
   <div className="add-widget-button" onClick={onClick}>
     <span className="add-widget-link">{text}</span>
   </div>

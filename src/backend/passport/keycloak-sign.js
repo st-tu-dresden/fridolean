@@ -70,6 +70,7 @@ module.exports = new PassportLocalStrategy({
                 // compared to my computer vs server the clock skew was 40 seconds
                 decoded = jwt.verify(kc_token, publicKey, {clockTolerance: 300});
             } catch (error) {
+                console.error(error);
                 return done("Error decoding token");
             }
             const userData = {

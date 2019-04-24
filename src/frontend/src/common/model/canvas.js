@@ -30,13 +30,15 @@ const layouts = require("./canvasTypes")
  *  }
  */
 
-export const createCanvas = function (title = "", type = "BUSINESS_MODEL", parent = "") {
+export const createCanvas = function (title = "", type = "BUSINESS_MODEL", description = "", configuration = "", parent = "") {
     let layout = layouts[type];
     if (!layout) throw new Error(`'${type}' is no valid canvas type`)
     return {
         _id: uuidv4(),
         canvasType: type,
         title: title,
+        description: description,
+        configuration: configuration,
         tags: [],
         options: {
             enableMarkdown: true

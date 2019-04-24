@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+    <properties/>
+    <struct>
+        <or abstract="true" mandatory="false" name="optional">
+            <feature name="markdown" />
+            <feature name="drag and drop" />
+            <feature name="helper" />
+        </or>
+    </struct>
+    <constraints/>
+        <calculations Auto="true" Constraints="true" Features="true" Redundant="true" Tautology="true"/>
+    <comments/>
+    <featureOrder userDefined="false"/>
+</featureModel>

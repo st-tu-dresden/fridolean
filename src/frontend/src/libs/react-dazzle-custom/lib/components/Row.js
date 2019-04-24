@@ -47,6 +47,7 @@ function Row(props) {
         dragable={dragable}
         canAdd={canAdd}
         borderColor={borderColor}
+        type={props.type}
       >
         <Widgets
           key={index}

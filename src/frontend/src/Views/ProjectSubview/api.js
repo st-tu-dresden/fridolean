@@ -5,7 +5,7 @@
 
  import {fetchAPI, setCurrentUser} from "../../api"
  import {getCanvasTypes, getCanvasInfo} from "../../common/model/canvas"
- 
+
 function verifyTitle(title) {
     return title.trim().length > 0;
 }
@@ -67,7 +67,7 @@ export function withProjectId(projectId, handler) {
  *   - Title
  *   - Type
  *   - Timestamp (last edited)
- * 
+ *
  * @param {String} projectId - Information about this project will be returned
  * @returns {Promise}
  */
@@ -87,10 +87,12 @@ export function getProject(projectId, tag) {
                         .map(c => ({
                             id: c._id,
                             title: c.title,
+                            description: c.description,
+                            configuration: c.configuration,
                             type: canvasTypes.filter(t => t.data === c.canvasType)[0].view,
                             timestamp: c.lastEdited,
                         })),
-                    
+
                     tag: tag,
                 };
                 return project;
@@ -113,6 +115,7 @@ export function getProject(projectId, tag) {
                     .map(c => ({
                         id: c._id,
                         title: c.title,
+                        description: c.description,
                         type: canvasTypes.filter(t => t.data === c.canvasType)[0].view,
                         timestamp: c.lastEdited,
                     })),
@@ -124,7 +127,7 @@ export function getProject(projectId, tag) {
                         rights: m.rights,
                         accepted: true, // Not implemented in backend
                     })),
-                
+
                 tag: undefined,
             }
             currentProjectId = projectId;
@@ -140,7 +143,7 @@ export function getProject(projectId, tag) {
  * - Timestamp (created)
  * - Is current State
  * - Is currently viewed State
- * 
+ *
  * @param {String} projectId - Timeline will be returned for this project
  * @returns {Promise}
  */
@@ -171,7 +174,7 @@ export function getTimeline(projectId, tag) {
 
 /**
  * Deletes canvas with given ID
- * 
+ *
  * @param {String} canvasId - Canvas which should be deleted
  * @returns {Promise}
  */
@@ -182,8 +185,8 @@ export function deleteCanvas(canvasId) {
 
 /**
  * Deletes project with given ID
- * 
- * @param {String} projectId - Project which should be deleted 
+ *
+ * @param {String} projectId - Project which should be deleted
  * @returns {Promise}
  */
 export function deleteProject(projectId) {
@@ -192,15 +195,16 @@ export function deleteProject(projectId) {
 
 /**
  * Creates canvas, and returns ID of new canvas
- * 
+ *
  * @param {String} title - Title of the new canvas
  * @param {String} canvasType - Type of the new canvas
+ * @param {String} description - Canvas description
+ * @param {String} configuration - Canvas configuration
  * @returns {Promise<String>}
  */
-export function createCanvas(title, canvasType) {
+export function createCanvas(title, canvasType, description, configuration) {
     title = title.trim();
     let projectId = currentProjectId;
-
     if (!verifyTitle(title)) {
         return Promise.reject('Title not accepted.');
     }
@@ -209,25 +213,29 @@ export function createCanvas(title, canvasType) {
         return Promise.reject('Specified canvasType does not exist');
     }
 
+    //description = "hier2"
     return fetchAPI("POST", `projects/${projectId}/canvas`, {
             body: {
                 "title": title,
                 "type": canvasType.toUpperCase(), // Full caps, without "CANVAS", no spaces - only "_"
+                "description": description,
+                "configuration": configuration,
             },
         })
         .then(response => response.json())
         .then(jsonresp => ({
             id: jsonresp._id,
+            configuration: configuration,
             timestamp: jsonresp.lastEdited
         }));
 }
 
 /**
  * Sends invitation to user with given e-mail address
- * 
+ *
  * @param {String} email - E-Mail adress of user that will be invited
  * @returns {Promise}
- * 
+ *
  * @todo (Simple) e-mail verification
  */
 export function inviteCollaborator(email, rights) {
@@ -257,10 +265,10 @@ export function inviteCollaborator(email, rights) {
 
 /**
  * Removes user with given e-mail address from collaborators
- * 
+ *
  * @param {String} email - E-Mail adress of user that will be removed
  * @returns {Promise}
- * 
+ *
  * @todo (Simple) e-mail verification
  */
 export function deleteCollaborator(email) {
@@ -271,11 +279,11 @@ export function deleteCollaborator(email) {
 
 /**
  * Updates rights of given collaborator
- * 
+ *
  * @param {String} email - E-Mail adress of user that will be changed
  * @param {String} rights - New rights of collaborator
  * @returns {Promise}
- * 
+ *
  * @todo (Simple) e-mail verification
  */
 export function updateCollaborator(email, rights) {
@@ -295,13 +303,13 @@ export function updateCollaborator(email, rights) {
 
 /**
  * Updates properties of given project
- * 
+ *
  * @param {String} projectId - ID of the project to update
  * @param {String} title - New title of the project, or null to use the old title
  * @param {String} description - New description of the project, or null to use the old description
  * @param {Boolean} isPublic - New visibility of the project, or null to use old visibility
  * @returns {Promise}
- * 
+ *
  * @todo Verify title
  */
 export function updateProject(projectId, title, description, isPublic) {
@@ -316,12 +324,12 @@ export function updateProject(projectId, title, description, isPublic) {
 
 /**
  * Clones project state from given tag into a new private project with the user as the only collaborator
- * 
+ *
  * @param {String} tagId - ID of tag that will be cloned
  * @param {String} title - Title of new project that will be created
  * @param {String} description - Description of the new project that will be created
  * @returns {Promise}
- * 
+ *
  * @todo Implementation
  * @todo Verify title
  */
@@ -341,7 +349,7 @@ export function cloneTag(tagId, title, description) {
 
 /**
  * Creates new tag in timeline, returns created tag
- * 
+ *
  * @param {String} title - Title of the new tag
  * @returns {Promise}
  */
@@ -368,7 +376,7 @@ export function createTag(title) {
 
 /**
  * Restores current state from tag / Loads contents from tag into current state
- * 
+ *
  * @param {String} tagId - ID of tag to which current state will be restored
  */
 export function restoreTag(tagId) {
@@ -379,9 +387,9 @@ export function restoreTag(tagId) {
 
 /**
  * Deletes tag with given ID from timeline
- * 
+ *
  * @param {String} tagId - ID of tag that will be deleted
- * 
+ *
  * @todo Implementation
  */
 export function deleteTag(tagId) {

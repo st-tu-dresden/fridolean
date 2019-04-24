@@ -1,18 +1,21 @@
 import React from 'react';
 import { Input, Button, Divider, Card, Dropdown, Form, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import {Helper} from '../../../Components/Helper'
+import { Helper } from '../../../Components/Helper'
 
 import ConfirmationModal from './confirmation';
 import { verifyTitle } from '../../../modules/ClientInput';
 
 import { canvasTypes } from '../api';
+// eslint-disable-next-line
+import { FeatureSetting, getConfig, getConfigString } from './FeatureSetting';
 
 const canvasColors = {
     [canvasTypes[0].view]: "violet",
     [canvasTypes[1].view]: "yellow",
-    [canvasTypes[2].view]: undefined, //"red",
+    [canvasTypes[2].view]: "red",
     [canvasTypes[3].view]: "green",
+    [canvasTypes[4].view]: "blue",
 }
 
 export const CanvasCard = (props) => (
@@ -27,6 +30,9 @@ export const CanvasCard = (props) => (
                 }}>
                     {props.canvas.title}
                 </Link>
+                <Card.Description>
+                    <h5><p></p><p>{props.canvas.description} </p></h5>
+                </Card.Description>
             </Card.Header>
         </Card.Content>
         <Card.Content>
@@ -57,23 +63,28 @@ export class NewCanvasCard extends React.Component {
         this.state = {
             titleError: false,
         }
+        this.configXml = "";
     }
+
+
     onCreateCanvas() {
         let title = verifyTitle(this.canvastitle.inputRef.value);
-
+        let description = this.description.inputRef.value;
+        let configuration = getConfigString();
         if (!title) {
             return this.setState({titleError: true});
         }
-
         this.props.actions.createCanvas(
             title,
-            this.canvastype.state.value.split(' ').join('').toLowerCase()
+            this.canvastype.state.value.split(' ').join('').toLowerCase(),
+            description,
+            configuration
         );
+        // console.log("CONFIGURATION HERE: "+configuration);
     }
-    render() {
-        // The line below is ugly
-        let canvastypes = this.props.canvastypes.filter(t => t.value !== "VALUE_PROPOSITION");
 
+    render() {
+        let canvastypes = this.props.canvastypes;
         return (
             <Card>
                 <Card.Content>
@@ -103,6 +114,13 @@ export class NewCanvasCard extends React.Component {
                                 />
                             </Form.Field>
                             <Form.Field>
+                                <Input
+                                    label={{content: "Description", color: undefined}}
+                                    ref={(x) => this.description = x}
+                                    fluid
+                                />
+                            </Form.Field>
+                            <Form.Field>
                                 <Button
                                     floated="right"
                                     primary
@@ -110,6 +128,7 @@ export class NewCanvasCard extends React.Component {
                                 >
                                     Add
                                 </Button>
+                                <FeatureSetting parentObj={this} access="pre"/>
                             </Form.Field>
                         </Form>
                     </Card.Description>

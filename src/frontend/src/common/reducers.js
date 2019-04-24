@@ -266,6 +266,7 @@ export function composeReducersByType(initialstate=undefined,initialPass=true,..
                     let current=predicateMappings[index];
                     if(current.pred(action)){
                         if(verbose) console.log("Applying ",current);
+                        if(verbose) console.log("Applying(Action): ",action);
                         if(verbose) console.log("Pre-state: ",resultState);
                         resultState=applyReducer(state,action,current,resultState);
                         if(verbose) console.log("Post-state: ",resultState)
@@ -276,6 +277,7 @@ export function composeReducersByType(initialstate=undefined,initialPass=true,..
                     size=actionTypeReducers.length;
                     for(index=0;index<size;index++){
                         if(verbose) console.log("Applying ",actionTypeReducers[index]);
+                        if(verbose) console.log("Applying(Action): ",action);
                         if(verbose) console.log("Pre-state: ",resultState);
                         resultState=applyReducer(state,action,actionTypeReducers[index],resultState);
                         if(verbose) console.log("Post-state: ",resultState)

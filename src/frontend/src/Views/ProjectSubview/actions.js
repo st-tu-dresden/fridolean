@@ -5,7 +5,7 @@ import { GENERIC_ASSIGNMENT_ERROR } from '../../common/assignment';
 const prefix = "//ProjectSubview/"
 
 export const Actions = {
-    
+
     // Requests: Actions indicating the start of some API-Call
     REQUEST_PROJECT:             { type: prefix + "REQ_PROJECT" },
     REQUEST_ADD_COLLABORATOR:    { type: prefix + "REQ_ADD_COLLAB" },
@@ -55,7 +55,7 @@ const simpleAPICallCreator = (dispatch, props) => (...args) => {
             console.log(reason);
             if (props.error &&
                 props.error[reason.response.status]) {
-                
+
                 let { error, code, handler } = props.error[reason.response.status](reason);
                 dispatch({ ...Actions.API_ERROR, error, code, handler, args });
             } else {
@@ -105,6 +105,7 @@ export const getActionCreators = (dispatch, history) => ({
                 }
             })
             .catch((reason) => {
+                //console.error(reason);
                 // TODO
                 let code = reason.response.status;
                 if (code === 400 || code === 403) {
@@ -148,13 +149,17 @@ export const getActionCreators = (dispatch, history) => ({
     }),
     createCanvas: simpleAPICallCreator(dispatch, {
         request: Actions.REQUEST_CREATE_CANVAS,
-        api: (title, type) => SubviewAPI.createCanvas(title, type),
-        then: (title, type, canvasData) => ({
+        api: (title, type, description, configuration) => SubviewAPI.createCanvas(title, type, description, configuration),
+        then: (title, type, description, configuration, canvasData) => ({
             ...Actions.CREATE_CANVAS,
             canvasId: canvasData.id,
             title,
-            canvasType: SubviewAPI.canvasTypes.filter(t => t.data.toLowerCase() === type)[0].view,
+            description: description,
+            canvasType: SubviewAPI.canvasTypes.filter(t =>
+                t.data.replace(" ", "_").toUpperCase() ===
+                type.replace(" ", "_").toUpperCase())[0].view,
             timestamp: canvasData.timestamp,
+            configuration: configuration,
         }),
     }),
     deleteCanvas: simpleAPICallCreator(dispatch, {

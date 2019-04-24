@@ -6,7 +6,6 @@ import { changeCanvasTags, changeCanvasTitle, changeCanvasOptions, createTag } f
 import RandomColor from 'randomcolor';
 import { Segment, Divider, Input, Checkbox, Card, Accordion } from 'semantic-ui-react'
 
-
 class CanvasSettings extends BaseSettings {
 
     onTagsChange(tags) {
@@ -43,7 +42,7 @@ class CanvasSettings extends BaseSettings {
     }
 
     render() {
-        let canvas = this.getCanvas()
+        let canvas = this.getCanvas();
         let globalTags = this.getGlobalTags();
         return (<Segment>
             <Input disabled={this.props.readonly} defaultValue={canvas.title} label="Title" fluid onChange={(_, input) =>

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import RandomColor from 'randomcolor';
-import {Segment} from 'semantic-ui-react'
+import {Segment, Image} from 'semantic-ui-react';
 //import uuidv1 from 'uuid/v1';
 
 import PostIt from "../../Components/CanvasEditor/PostIt";
 import LinkIt from "../../Components/CanvasEditor/LinkIt";
-import TargIt from "../../Components/CanvasEditor/TargIt";
 import {createTextEntry, createReferencePair} from "../../common/model/entry";
 import Dashboard from '../../libs/react-dazzle-custom/lib/components/Dashboard';
-import {Helper} from "../../Components/Helper"
+import {Helper} from "../../Components/Helper";
+import stamp from '../../img/postage-stamp.png';
+import { SharedSnackbarProvider } from './SharedSnackbarProvider';
+import { changeEntryTags } from './actions';
 
 import './style.css';
 
@@ -34,16 +35,11 @@ class BuildBlock extends Component{
     super(props);
     this.buildStructure = this.buildStructure.bind(this);
     this.entryReps={};
-    this.printListener = this.printListener.bind(this)
-    this.state = {...this.state||{},printing:false}
-  }
-
-  printListener(evt){
-    this.setState({...this.state||{}, printing: evt.matches});
+    this.state = {...this.state||{}}
   }
 
   componentDidMount(){
-    this.setState({...this.state||{}, printing: false});
+    this.setState({...this.state||{} });
     window.matchMedia("print").addListener(this.printListener);
   }
 
@@ -70,96 +66,55 @@ class BuildBlock extends Component{
         by react-dazzle required structure
         see npm react-dazzle for more information
       */
+
       let structure = {
-              widgets: {
-                PostIt: {
-                  type: PostIt,
-                  title: 'Entry'
-                },
-                LinkIt: {
-                  type: LinkIt,
-                  title: 'Entry'
-                },
-                TargIt: {
-                  type: TargIt,
-                  title: 'Entry'
-                }
-              },
-              layout: {
-                  rows: [{
-                    columns: [{
-                      className: 'col-md-12 col-sm-12 col-xs-12',
-                      widgets: [],
-                    }]
-                  }]
-                }
-          };
-
-          /*
-            create different entries depending on the type of the BuildBlock
-          */
-          switch(this.props.block.buildingBlockType){
-          //only text data
-          case 'data':
-              Object.values(this.props.block.entries).forEach((entry,index) => {
-                structure.layout.rows[0].columns[0].widgets.push({key: 'PostIt', title: entry.content.title ,text: entry.content.text,
-                    entyID: entry._id, blockID: this.props.block._id, canvasID:this.props.canvasid, 
-                    model: entry, callback: this.onChangeEntry.bind(this), onKeyDown: this.onKeyDown.bind(this), editable: editable,
-                    openSettings : this.props.openSettings,
-                    globalTags:this.props.globalTags,
-                    enableMarkdown:this.props.enableMarkdown,
-                    ref: (entryRep)=>{
-                      if(entryRep){
-                      this.entryReps[entry._id]=entryRep;
-                    }else{
-                      delete this.entryReps[entry._id];
-                    }}});
-              });
-              break;
-            //text data with a ref link
-            case 'link':
-              Object.values(this.props.block.entries).forEach((entry,index) => {
-                structure.layout.rows[0].columns[0].widgets.push({key: 'LinkIt', title: entry.content.title ,text: entry.content.text,
-                    entyID: entry._id, blockID: this.props.block._id, canvasID:this.props.canvasid, 
-                    project_id: this.props.project_id, mode: this.props.mode, tagID: this.props.tagID, model: entry,
-                    editable: editable, callback: this.onChangeEntry.bind(this),
-                    onKeyDown: this.onKeyDown.bind(this),
-                    onReferenceCall: this.onReferenceCall.bind(this),
-                    color : RandomColor({seed: 3*index}),
-                    openSettings : this.props.openSettings,
-                    globalTags:this.props.globalTags,
-                    enableMarkdown:this.props.enableMarkdown,
-                    ref: (entryRep)=>{
-                      if(entryRep){
-                      this.entryReps[entry._id]=entryRep;
-                    }else{
-                      delete this.entryReps[entry._id];
-                    }}});
-              });
-              break;
-            //target of an entry with type link
-            case 'target':
-              Object.values(this.props.block.entries).forEach((entry,index) => {
-                structure.layout.rows[0].columns[0].widgets.push({key: 'TargIt', editable: editable, title: entry.content.title ,text: entry.content.text,
-                    entyID: entry._id, blockID: this.props.block._id, canvasID:this.props.canvasid, 
-                    model: entry, callback: this.onChangeEntry.bind(this), onKeyDown: this.onKeyDown.bind(this),
-                    color : RandomColor({seed: 3*index}),
-                    openSettings : this.props.openSettings,
-                    globalTags:this.props.globalTags,
-                    enableMarkdown:this.props.enableMarkdown,
-                    ref: (entryRep)=>{
-                      if(entryRep){
-                      this.entryReps[entry._id]=entryRep;
-                    }else{
-                      delete this.entryReps[entry._id];
-                    }
-                  }});
-              });
-              break;
-            default:
-              throw new Error("Undefined type: "+this.props.block.buildingBlockType);
+        widgets: {
+          PostIt: {
+            type: PostIt,
+            title: 'Entry'
+          },
+          LinkIt: {
+            type: LinkIt,
+            title: 'Entry'
           }
+        },
+        layout: {
+          rows: [{
+            columns: [{
+              className: 'col-md-12 col-sm-12 col-xs-12',
+              widgets: [],
+            }]
+          }]
+        }
+      };
 
+      /*
+            create different entries depending on the type of the BuildBlock
+            */
+
+      // TODO this is a hack because I fail to properly remove the TargIt
+      if (this.props.block.buildingBlockType === "target") {
+        this.props.block.buildingBlockType = "data";
+      }
+      var postItClass = "PostIt";
+      if (this.props.block.buildingBlockType === "link") {
+        postItClass = "LinkIt";
+      }
+
+      Object.values(this.props.block.entries).forEach((entry,index) => {
+        structure.layout.rows[0].columns[0].widgets.push({key: postItClass, title: entry.content.title ,text: entry.content.text,
+          entyID: entry._id, blockID: this.props.block._id, canvasID:this.props.canvasid,
+          project_id: this.props.project_id, model: entry, callback: this.onChangeEntry.bind(this), onKeyDown: this.onKeyDown.bind(this), editable: editable,
+          openSettings : this.props.openSettings,
+          globalTags:this.props.globalTags,
+          enableMarkdown:this.props.enableMarkdown,
+          ref: (entryRep)=>{
+            if(entryRep){
+              this.entryReps[entry._id]=entryRep;
+            }else{
+              delete this.entryReps[entry._id];
+            }}});
+      });
       return structure;
     }
 
@@ -211,15 +166,19 @@ class BuildBlock extends Component{
     }
 
     addLinkEntry(text="",title="default",bindFocus=false){
-      let {linkIt, targIt, canvas} = createReferencePair(text, title, this.props.canvasid)
+      // eslint-disable-next-line
+      let {linkIt, canvas} = createReferencePair(text, title, this.props.canvasid)
       let blocks={
         [this.props.block._id]:{
           [linkIt._id]:linkIt
         },
+        /*
         [this.props.refblock._id]:{
           [targIt._id]:targIt
         }
+        */
       }
+
       this.props.actions.addEntryCanvas(this.props.canvasid,blocks,{[canvas._id]:canvas});
       if(bindFocus) window.setTimeout(this.focusEntry.bind(this),10,linkIt._id);
     }
@@ -245,22 +204,6 @@ class BuildBlock extends Component{
             if(selectionStart!==model.content.text.length) return;
             this.addEntry("",null,true);
             break;
-          /*case "Backspace":
-            if(isSelection) return;
-            if(selectionStart!==0) return;
-            if(model.content.text!=="") return;
-            let keyList=Object.keys(this.props.block.entries);
-            let ownIndex=keyList.indexOf(model._id);
-            let focusTarget=null;
-            if(ownIndex>0){
-              focusTarget=keyList[ownIndex-1];
-            }else if(keyList.length>1){
-              focusTarget=keyList[0];//I don't know why this has to be a '0', the focus appears to be selected *after* the removal?
-            }
-            this.onRemoveEntry(Object.assign({index: ownIndex},model));
-            if(focusTarget)
-              this.focusEntry(focusTarget);
-            break;*/
           default:
             return;
         }
@@ -280,12 +223,17 @@ class BuildBlock extends Component{
     event.stopPropagation();
     event.preventDefault();
     let textContent = event.dataTransfer.getData("text");
+    
     let jsonContent = null;
     let source;
     let textMarkers;
     let targetPosition=-1;
-    if (entryID)
+    if (entryID) {
       targetPosition=Object.keys(this.props.block.entries).indexOf(entryID);
+      const newTags =[this.props.draggedTagId];
+      const delTags = [];
+      this.props.dispatch(changeEntryTags(entryID, this.props.block._id, this.props.canvasid, newTags, delTags));
+    }
     try {
       jsonContent = JSON.parse(event.dataTransfer.getData("json"));
       source = jsonContent.source;
@@ -298,6 +246,7 @@ class BuildBlock extends Component{
       if(textMarkers){
         let {start,end}=textMarkers;
         let sourceEntry=this.props.findEntryByIDs(source.entry,source.block,source.canvas);
+        
         if((!sourceEntry)||(sourceEntry.content.text.substring(start,end)!==textContent)){
           this.addEntry(textContent);
           console.log("Could not verify text-source, creating new entry instead");
@@ -313,8 +262,9 @@ class BuildBlock extends Component{
               source.block,source.canvas],
             [newEntry,this.props.block._id,this.props.canvasid]);
         }
-      }else
+      }else{
         this.pullEntry(source,targetPosition);
+      }
     } else if (textContent){
       this.addEntry(this.reformatImportText(textContent));
     }
@@ -324,7 +274,6 @@ class BuildBlock extends Component{
     event.preventDefault();
     //event.persist();
     event.dataTransfer.dropEffect = "move"
-    //console.log("Drag over:",event.target);
   }
 
     focusEntry(entryID){
@@ -340,6 +289,7 @@ class BuildBlock extends Component{
     }
 
     pullEntry(source,targetPosition=-1){
+      //console.log('pullEntry is called');
       let {canvas,block,entry}=source;
       if(this.props.canvasid !== canvas) throw new Error("Inter-canvas drag&drop is not supported yet");//TODO
       if(targetPosition!==-1)
@@ -375,12 +325,7 @@ class BuildBlock extends Component{
       //first, check if block is editable
       let editable = true;
       let canAdd = true;
-      //if target block, no entries can be added directly
-      if(this.props.block.buildingBlockType === 'target'){
-        canAdd = false;
-        editable = false;
-      }
-      //maybe you have no rights or are in history mode
+      //maybe you have no rights or are in history modes
       if(this.props.editable === false){
         editable = false;
       }
@@ -388,21 +333,32 @@ class BuildBlock extends Component{
       if(this.props.lockings !== undefined && this.props.lockings.indexOf(this.props.block._id) > -1){
         editable = false;
       }
-      
-      if (this.state.printing){
-        editable=false;
-        canAdd=false;
-      }
 
       //build structure (layout) fro react-dazzle lib
       let structure = this.buildStructure();
+      let blockTitle = this.props.block.title;
+
       return(
-        <Segment className={this.props.className} onDragOver={this.onDragOver.bind(this)} onDrop = {this.onDragDrop.bind(this)} >
+        <Segment className={this.props.className} 
+                  onDragOver={this.onDragOver.bind(this)} 
+                  onDrop = {this.onDragDrop.bind(this)} >
         <div style={this.props.style}>
         <span>
-        <h3>{this.props.block.title}   {this.props.help&&(this.state.printing?undefined:true)&&(<Helper topic={this.props.help}/>)}</h3>
-      </span>
+
+        <h3>{this.props.block.title} 
+          <SharedSnackbarProvider>
+            {this.props.help && (<Helper topic={this.props.help}/>)}
+          </SharedSnackbarProvider>
+        </h3>
+        </span>
+        {blockTitle === "Letter to Grandma" ? (
+          <div>
+            <Image src={stamp}  style={{width: 66, height: 64, float:'right'}}  size="small" />
+          </div>
+        ) : ( <div/>
+        )}
         <Dashboard
+          type = {this.props.type}
           widgets = {structure.widgets}
           layout = {structure.layout}
           editable = {editable}
@@ -413,9 +369,9 @@ class BuildBlock extends Component{
           entryDrop = {this.onDragDrop.bind(this)}
           //dragable = {false}
           canAdd = {canAdd}
-      /></div>
-          </Segment>
-        );
+        /></div>
+        </Segment>
+      );
     }
 
 }

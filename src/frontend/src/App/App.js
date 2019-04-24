@@ -97,25 +97,17 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authenticated: false,
-            printing: false
+            authenticated: false
         };
-        this.printingListener = this.printingListener.bind(this);
         this.toggleAuthenticationStatus = this.toggleAuthenticationStatus.bind(this);
     }
 
     componentDidMount() {
         // check if user is logged in on refresh
         this.toggleAuthenticationStatus();
-        window.matchMedia("print").addListener(this.printingListener);
     }
 
     componentWillUnmount(){
-        window.matchMedia("print").removeListener(this.printingListener);
-    }
-
-    printingListener(evt){
-        this.setState({...this.state||{}, printing:evt.matches});
     }
 
     toggleAuthenticationStatus() {
@@ -131,7 +123,7 @@ class App extends Component {
             // { /* Tell the Router to use our enhanced history */ }
             <ConnectedRouter history={this.props.history}>
                 <div style={{backgroundColor: /* See body->background-color for reasoning */ "white"}}>
-                    {this.state.printing?"":<Header isAuthenticated={this.state.authenticated}/>}
+                <Header isAuthenticated={this.state.authenticated}/>
                     <Switch>
                         <PropsRoute
                             exact
@@ -180,7 +172,7 @@ class App extends Component {
                         />
                         <Route component={NotFound}/>
                     </Switch>
-                    {this.state.printing?"":<Footer/>}
+                    <Footer/>
                 </div>
             </ConnectedRouter>
         );

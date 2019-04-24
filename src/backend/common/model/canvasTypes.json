@@ -7,7 +7,7 @@
             "Key Resources",
             "Customer Relationships",
             "Channels",
-            {"title": "Customer Segments", "buildingBlockType": "target"},
+            {"title": "Customer Segments", "buildingBlockType": "data"},
             "Cost Structure",
             "Revenue Streams",
             {"title": "Value Propositions", "buildingBlockType": "link"}
@@ -67,6 +67,28 @@
             "Advantages",
             "Objections",
             "Features"
+        ]
+    },
+    "NEW SPIN":{
+        "view":" New Spin Canvas",
+        "blocks":[
+            "Situation Questions",
+            "Problem Questions",
+            "Implicit Needs",
+            "Implication Questions",
+            "Pain-Gain Questions",
+            "Explicit Needs",
+            "Benefits",
+            "Advantages",
+            "Objections",
+            "Features"
+        ]
+    },
+  
+    "POSTCARD":{
+        "view":"Letter to Grandma",
+        "blocks":[
+           "Letter to Grandma"
         ]
     }
 }

@@ -85,8 +85,6 @@ class WidgetFrame extends Component {
   remove = () => {
     const { widgetIndex } = this.props;
     //const newLayout = removeWidget(layout, rowIndex, columnIndex, widgetIndex);
-    //console.log('remove call');
-    //console.log(widgetIndex);
     let e = {index: widgetIndex};
     this.props.onRemove(e);
   }

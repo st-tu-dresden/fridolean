@@ -6,7 +6,7 @@ export class ProjectManager{
     
     /**
      * Creates a new canvas with the given data
-     * @param {{title: string, type: string}} data 
+     * @param {{title: string, type: string, description: string}} data 
      * @param {function} callback 
      */
     createCanvas(data, callback){

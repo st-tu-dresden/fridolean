@@ -41,6 +41,7 @@ class ProjectSubview extends Component {
                 </Dimmer>
             );
         }
+
         let canvastypes = SubviewAPI.canvasTypes.map(c => ({ text: c.view, value: c.data}));
         let userMail = store.getState().user.email;
         let canEdit = this.props.project.collaborators

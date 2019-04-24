@@ -49,6 +49,7 @@ const LayoutRenderer = (props) => {
         borderColor={borderColor}
         entryDragOver={entryDragOver}
         entryDrop={entryDrop}
+        type={props.type}
       />
     );
   });

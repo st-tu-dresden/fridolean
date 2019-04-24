@@ -20,3 +20,48 @@ body {
 .markdownnote img {
   max-width: 100%;
 }
+
+.canvasgrid {
+  min-height: 500px;
+}
+
+.canvas_POSTCARD .defaultWidgetFrame {
+  height: 400px;
+  width: 100%;
+}
+
+.canvas_POSTCARD .add-widget-button {
+  display:none;
+}
+
+.canvas_POSTCARD .remove {
+  display:none;
+}
+
+.canvas_POSTCARD .markdownnote {
+  overflow-wrap: break-word;
+}
+
+/* this is for featureselection only! TODO don't style all ul globally */
+ul {
+  list-style-type: none;
+  user-select: none;
+}
+
+/* this is for featureselection only! TODO don't style all pre globally */
+pre {
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+@media print {
+  img, div.ui.large.borderless.stackable.top.fixed.menu, div.ui.inverted.vertical.segment,
+  i.remove.icon.removeIcon, i.setting.link.icon, i.home.icon, div.add-widget-button {
+    display:none!important;
+  }
+ div.ui.grid .row .column {
+    padding-left: 0.5rem!important;
+    padding-right: 0.5rem!important;
+  }
+
+}

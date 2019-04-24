@@ -8,14 +8,17 @@ import {fetchAPI,socketIoLocation,setCurrentUser} from '../../api';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {runCallBacks} from "../../features/index.js";
+import {getParams} from "../../features/markdown";
+import {getCanvasEditor} from "../../Views/ProjectSubview/components/FeatureSetting";
 
 import {EVENT_INIT, EVENT_LOCKINFO} from '../../common/event';
 import {Segment} from 'semantic-ui-react';
 import Settings from '../Settings/SettingsModal'
 import {inflateCanvases, inflateTags} from '../../common/model/inflation'
 
-import{addEntry, removeEntry, changeEntry, changeToVP, initAction, addEntryCanvas, delAdd, changeAdd} from './actions/index'; //todo
-import {createReferencePair,createTextEntry} from '../../common/model/entry'
+import{addEntry, removeEntry, changeEntry, changeToVP, initAction, addEntryCanvas, delAdd, changeAdd, changeCanvasDescription} from './actions/index'; //todo
+import {createTextEntry} from '../../common/model/entry'
 import {bindClient} from '../../Socket/socket'
 import {pathAssign} from '../../common/assignment'
 
@@ -117,7 +120,7 @@ class CanvasEditor extends Component{
         }else{
           if(state.volatile===undefined) state.volatile={locks:{}};
           state.volatile.pending=[];
-    
+
           this.state.values.mode = accessLevel;
           this.props.dispatch({type:EVENT_INIT,state:state});
           this.hasContent=true;
@@ -149,10 +152,14 @@ class CanvasEditor extends Component{
    * the callback root -> pushes to redux store
    */
   onAddEntry(e, bb_uid, cb){
+    runCallBacks("onAddEntryBefore", this, e, bb_uid, cb);
+
     let buildingBlock=this.props.store.persistent.canvases[this.state.values.canvasID].buildingBlocks[bb_uid];
     this.props.addEntry(e,bb_uid,this.state.values.canvasID);
     if(cb)
       window.setTimeout(cb,10,e._id)
+
+    runCallBacks("onAddEntryAfter", this, e, bb_uid, cb);
   }
 
   findBlockByID(blockID,state=this.findStateById()){
@@ -167,90 +174,7 @@ class CanvasEditor extends Component{
   }
 
   moveEntry(sourceBlockID,entryID,targetBlockID, targetPosition=-1){
-    const state=this.findStateById()
-    let sourceBlock=this.findBlockByID(sourceBlockID,state);
-    let targetBlock=this.findBlockByID(targetBlockID,state);
-    if(!targetBlock||!sourceBlock) throw new Error("Invalid source or target!");
-    let entry=sourceBlock.entries[entryID];
-    if(!entry) throw new Error("Entry doesn't exist!");
-    let delCanvases=[];
-    let newCanvases={};
-    let delBlocks={};
-    let newBlocks={};
-    let refCanvasID=null;
-    let tarBlockID=null;
-    let tarEntryID=null;
-    switch(sourceBlock.buildingBlockType){
-      case "target":
-        alert("Drag & Drop not supported for target-blocks");
-        return;
-      case "link":
-        refCanvasID=entry.content.reference;
-        tarEntryID=entry.content.target;
-        for(var blockID in state.buildingBlocks){
-          let block=state.buildingBlocks[blockID];
-          if(block.entries[tarEntryID]){
-            tarBlockID=blockID;
-            tarEntry=block.entries[tarEntryID];
-            break;
-          }
-        }
-        if(refCanvasID)
-          delCanvases.push(refCanvasID);
-        if(tarBlockID&&tarEntryID)
-          delBlocks[tarBlockID]={...delBlocks[tarBlockID],[tarEntryID]:tarEntry};
-        delBlocks[sourceBlockID]={...delBlocks[sourceBlockID],[entryID]:entry};
-        break;
-      case "data":
-        delBlocks[sourceBlockID]={...delBlocks[sourceBlockID],[entryID]:entry};
-        break;
-    }
-    switch(targetBlock.buildingBlockType){
-      case "target":
-        alert("Drag & Drop not supported for target-blocks");
-        return;
-      case "link":
-        alert("Cannot move entries to link-blocks (no partner-block)");
-        return;
-        /*if(!tarBlockID){
-        }
-        let targIt=null, canvas=null;
-        if(entry.entryType!=="link"){
-          let result = createReferencePair(entry.content.text,entry.content.title,this.state.values.canvasID);
-          entry=result.linkIt; targIt=result.targIt; canvas=result.canas;
-        }else{
-          
-        }
-        newBlocks[tarBlockID]={...newBlocks[tarBlockID],[targIt._id]:targIt};
-        newBlocks[targetBlockID]={...newBlocks[targetBlockID],[entry._id]:entry};*/
-      case "data":
-        if(entry.entryType!=="plain"){
-          entry=createTextEntry(entry.content.text,entry.content.title);
-          entryID=entry._id;
-        }
-        let targetEntries=newBlocks[targetBlockID]||targetBlock.entries;
-        let ids=Object.keys(targetEntries);
-        while(targetPosition<0){
-          targetPosition+=ids.length+1;
-        }
-        if(targetBlockID!==sourceBlockID){
-          ids.push(ids[ids.length-1])
-          ids.copyWithin(targetPosition+1,targetPosition);
-        }else{
-          let prevIndex=Object.keys(targetBlock.entries).indexOf(entry._id);
-          if(prevIndex===targetPosition) return;
-          if(targetPosition<prevIndex){
-            ids.copyWithin(targetPosition+1,targetPosition,prevIndex);
-          }else{
-            ids.copyWithin(prevIndex,prevIndex+1,targetPosition+1);
-          }
-        }
-        ids[targetPosition]=entryID;
-        let newEntries={}
-        ids.forEach((id)=>newEntries[id]=targetEntries[id]||entry);
-        newBlocks[targetBlockID]=newEntries;
-    }
-    this.props.delAdd(this.state.values.canvasID,delCanvases,newCanvases,delBlocks,newBlocks);
+    runCallBacks("onMoveEntry", this, sourceBlockID,entryID,targetBlockID, targetPosition=-1);
   }
 
   /**
@@ -304,6 +228,13 @@ class CanvasEditor extends Component{
   onReferenceCall(e){
   }
 
+
+  onChangeDescription(description) {
+    this.props.dispatch(changeCanvasDescription(this.state.values.canvasID, description));
+  }
+
+
+
   /**
    * extracts the current canvasstate from provided project state
    */
@@ -315,7 +246,9 @@ class CanvasEditor extends Component{
    * called directly bevor render()
    */
   componentDidMount(){
-   //console.log("componentDidMount:", this.state);
+   // console.log("componentDidMount:", this.state);
+   getParams(this);
+   getCanvasEditor(this);
   }
 
   /**
@@ -356,8 +289,6 @@ class CanvasEditor extends Component{
       allcanvases = this.props.store.persistent.canvases;
       globalTags = this.props.store.persistent.tags;
     }else{
-      //console.log("tagState onRender",this.state.tagState);
-      //console.log("tagCanvases onRender",this.state.tagCanvases);
       let cid = this.state.values.canvasID;
       canvasstate = this.state.tagState;//.cid;
       allcanvases = this.state.tagCanvases;
@@ -390,38 +321,44 @@ class CanvasEditor extends Component{
     }
     this.state.values.renderCall++;
 
-    //console.log("canvasstate", canvasstate);
-
-
     return(
-      <Segment loading={loading} style={{minHeight: 500}}>
+      <Segment loading={loading} className={"canvasgrid canvas_" + canvasstate.canvasType}>
       <CanvasGrid class='CanvasGrid'
         type={canvasstate.canvasType}
         canvasid={canvasstate._id}
         canvases={allcanvases}
         lockings={this.state.values.lockings}
         title={canvasstate.title}
+        configuration={canvasstate.configuration}
+        description={canvasstate.description}
+        canvasTag={canvasstate.tags}
         mode={this.state.values.mode}
         tagID={this.state.values.tagID}
         editable={this.state.values.editable}
         project_id={this.props.match.params.projectId}
         buildingBlocks={canvasstate.buildingBlocks}
         onAddEntry={this.onAddEntry.bind(this)}
+        editor={this}
         moveEntry={this.moveEntry.bind(this)}
         addEntryCanvas={this.props.addEntryCanvas}
         onRemoveEntry={this.onRemoveEntry.bind(this)}
         onChangeEntry={this.onChangeEntry.bind(this)}
         onReferenceCall={this.onReferenceCall.bind(this)}
         findEntryByIDs={this.findEntryByIDs.bind(this)}
+        onChangeDescription={this.onChangeDescription.bind(this)}
         onChangeAdd={this.props.changeAdd}
         openSettings={(target)=>this.setState({...this.state,settingsTarget:target})}
-        globalTags={globalTags}>
+        globalTags={globalTags}
+        dispatch={this.state.values.mode!=="EDIT"?(...args)=>{console.warn("Called dispatch in readonly-mode:",...args)}:this.props.dispatch}
+        >
+        
       </CanvasGrid>
-      <Settings 
+      <Settings
         readonly={this.state.values.mode!=="EDIT"}
         key={this.state.settingsTarget}//Key changes cause creation of new component, resetting the state to the default value (props in this case)
         target={this.state.settingsTarget}
         store={this.props.store}
+        openSettings={(target)=>this.setState({...this.state,settingsTarget:target})}
         dispatch={this.state.values.mode!=="EDIT"?(...args)=>{console.warn("Called dispatch in readonly-mode:",...args)}:this.props.dispatch}
         onClose={()=>this.setState({...this.state,settingsTarget:null})}/>
       </Segment>

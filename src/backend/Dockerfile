@@ -5,14 +5,14 @@ ENV NODE_ENV production
 RUN apt-get update && \
         apt-get --yes install pdftk && \
         apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN yarn global add swagger@0.7.x -T
-RUN yarn global add serve@6.4.x -T
+#RUN npm install -g swagger@0.7.x
+#RUN npm install -g serve@6.4.e
 
 # install frontend + backend
 #COPY frontend/package-lock.json /app/frontend/package-lock.json
 #COPY backend/package-lock.json /app/backend/package-lock.json
-COPY yarn.lock package.json /app/backend/
-RUN cd /app/backend && yarn install
+COPY package-lock.json package.json /app/backend/
+RUN cd /app/backend && npm install
 
 # Backend
 

@@ -1459,40 +1459,40 @@ definitions:
             CostStructure,
             RevenueStreams,
             ValueProposition
-          ],                                    
+          ],
 
-          ValuePropositionCanvas: [      
+          ValuePropositionCanvas: [
             ProductsAndServices,
             GainCreators,
             PainRelievers,
             Gains,
-            Pains ,                                
+            Pains ,
             CustomerJobs
-          ],                            
+          ],
 
           LeanCanvas: [
-            Problem,                                  
-            Solution,                                   
-            KeyMetrics,                                      
-            UniqueValueProposition,                                                   
-            UnfairAdvantages,                                           
-            Channels,                                   
-            CustomerSegments,                                           
-            CostStructure,                                         
+            Problem,
+            Solution,
+            KeyMetrics,
+            UniqueValueProposition,
+            UnfairAdvantages,
+            Channels,
+            CustomerSegments,
+            CostStructure,
             RevenueStreams
-          ],                                 
+          ],
 
           CustomerJourney: [
-            Advertisement,                                        
-            PreSocialMedia,                                              
-            PreWordOfMouth,                                               
-            Expectations,                                       
-            PastExperiences,                                           
-            ServiceJourney,                                          
-            Experiences,                                      
-            RelationshipMenage,                                                  
-            PostSocialMedia,                                               
-            PostWordOfMouth,                                                
+            Advertisement,
+            PreSocialMedia,
+            PreWordOfMouth,
+            Expectations,
+            PastExperiences,
+            ServiceJourney,
+            Experiences,
+            RelationshipMenage,
+            PostSocialMedia,
+            PostWordOfMouth,
             DisSatisfaction
           ]
       buildingBlockType:

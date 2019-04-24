@@ -9,8 +9,8 @@ import { Icon } from 'semantic-ui-react'
 const DefaultFrame = ({ children, onRemove, editable, title }) => (
   <div className="defaultWidgetFrame" >
     <div className="defaultWidgetFrameHeader">
-      <span className="title">{title}</span>
-      {editable && <span className="remove" onClick={() => onRemove()}>
+      <span className="title" >{title}</span>
+      {editable && <span className="remove" onClick={() => onRemove()} >
         <Icon name="remove" className="removeIcon"/></span>}
     </div>
     {children}
@@ -32,6 +32,11 @@ DefaultFrame.propTypes = {
    * Function to call when the widget is removed.
    */
   onRemove: PropTypes.func,
+
+  /**
+   * Function to call when the widget is taged.
+   */
+  onDrop: PropTypes.func,
 
  /**
   * Title of the widget

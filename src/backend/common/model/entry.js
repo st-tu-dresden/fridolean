@@ -12,7 +12,7 @@ export const createEntry = function (text = "", title = "default", reference = "
 
 export const createTextEntry = (text = "", title = "default", tags = []) => createEntry(text, title, undefined, undefined, undefined, tags)
 export const createReferencePair = function (text = "", title = "default", parentID = "") {
-    let canvas = createCanvas(title, "VALUE_PROPOSITION", parentID);
+    let canvas = createCanvas(title, "VALUE_PROPOSITION", "", parentID);
     let targIt = createEntry(undefined, title, undefined, undefined, true);
     let linkIt = createEntry(text, title, canvas._id, targIt._id);
     return { linkIt, targIt, canvas }

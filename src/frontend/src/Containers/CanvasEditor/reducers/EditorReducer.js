@@ -8,7 +8,7 @@ import {createReducerType, createReducerTypeMapping, ReducerError} from '../../.
  * the changes are not in every case shown directly but handed ofer tho the websocket connection
  */
 export const EditorReducer = (persistent, action) => {
-  
+
   let canvases = persistent.canvases;
   let canvas = null;
   let block = null;
@@ -30,12 +30,9 @@ export const EditorReducer = (persistent, action) => {
     }
   }
   switch (action.type) {
-
-    /*
-    add entry : search for the right buildingBlock, the add the entry to its entry array
-    */
+    /* add entry : search for the right buildingBlock, the add the entry to its entry array */
     case 'ADD_ENTRY_ACTION':
-    
+
       if(action.entry === {} || action.entry === undefined || action.entry._id === undefined){
         throw ReducerError("add entry failure");
       }
@@ -66,7 +63,7 @@ export const EditorReducer = (persistent, action) => {
         }
       }
       return result;
-    
+
     case 'CHANGE_ADD_ACTION':
       let {changeAction,addAction}=action;
       let add=EditorReducer(persistent,addAction);
@@ -88,7 +85,7 @@ export const EditorReducer = (persistent, action) => {
         }
       }
       return {canvases};
-    
+
     case 'DEL_ADD_ACTION':
       result={canvases:{...action.newCanvases},tags:{}}
       if(action.canvas_uuid){
@@ -173,7 +170,7 @@ export const EditorReducer = (persistent, action) => {
          action.entry._id === undefined || action.canvas_uuid === undefined || action.block_uuid === undefined){
         throw ReducerError("change entry failure");
       }
-      
+
       return {
         canvases:{
           [action.canvas_uuid]: {
@@ -209,7 +206,7 @@ export const EditorReducer = (persistent, action) => {
         })
       }
       return result;
-    
+
     case 'CHANGE_TAG_ACTION':
       return {
         tags:{
@@ -233,7 +230,9 @@ export const EditorReducer = (persistent, action) => {
                   entries:{
                     [action.entry_uuid]:{
                       content:{
-                        tags:[...entry.content.tags,...action.addTags].filter(tag=>action.removeTags.indexOf(tag)<0)
+                        tags: [
+                          ...new Set([...entry.content.tags, ...action.addTags.filter(tag=>tag!=={})])
+                        ].filter(tag=>action.removeTags.indexOf(tag)<0)
                       }
                     }
                   }
@@ -244,7 +243,10 @@ export const EditorReducer = (persistent, action) => {
         }
         action.addTags.forEach((tag)=>{
           result.tags[tag]={
-            entries:{...persistent.tags[tag].entries,[action.entry_uuid]:{canvas:action.canvas_uuid,block:action.block_uuid,entry:action.entry_uuid}}
+            entries: {
+              ...(persistent.tags[tag]?persistent.tags[tag].entries:[]),
+              [action.entry_uuid]:{canvas:action.canvas_uuid,block:action.block_uuid,entry:action.entry_uuid}
+            }
           }
         })
         action.removeTags.forEach((tag)=>{
@@ -255,33 +257,44 @@ export const EditorReducer = (persistent, action) => {
         })
       }
       return result;
-    
+
     case 'CHANGE_CANVAS_TAGS_ACTION':
       result={
         tags:{},
         canvases:{
           [action.canvas_uuid]:{
-            tags:[...canvas.tags,...action.addTags].filter(tag=>action.removeTags.indexOf(tag)<0)
+            tags: [
+              ...new Set([...canvas.tags, ...action.addTags.filter(tag=>tag!=={})])
+            ].filter(tag=>action.removeTags.indexOf(tag)<0)
           }
         }
-      }
+      };
       action.addTags.forEach((tag)=>{
         result.tags[tag]={
-          canvases:[...persistent.tags[tag].canvases,action.canvas_uuid]
+          canvases:[
+            ...(persistent.tags[tag]?persistent.tags[tag].canvases:{}),
+            action.canvas_uuid]
         }
-      })
+      });
       action.removeTags.forEach((tag)=>{
         result.tags[tag]={
           canvases:persistent.tags[tag].canvases.filter((canv)=>canv!==action.canvas_uuid)
         }
-      })
+      });
       return result;
-
     case 'CHANGE_CANVAS_TITLE_ACTION':
       return{
         canvases:{
           [action.canvas_uuid]:{
             title:action.title
+          }
+        }
+      }
+      case 'CHANGE_CANVAS_DESCRIPTION_ACTION':
+      return{
+        canvases:{
+          [action.canvas_uuid]:{
+            description:action.description
           }
         }
       }
@@ -293,6 +306,14 @@ export const EditorReducer = (persistent, action) => {
           }
         }
       }
+      case 'CHANGE_CANVAS_CONFIGURATION_ACTION':
+        return{
+          canvases:{
+            [action.canvas_uuid]:{
+              configuration:action.configuration
+            }
+          }
+        }
     default:
       return persistent;
   }
@@ -317,5 +338,7 @@ export const typedEditorReducer = createReducerTypeMapping(
   createReducerType('CHANGE_ENTRY_TAGS_ACTION',(action)=>action.changed),
   createReducerType('CHANGE_CANVAS_TAGS_ACTION',(action)=>action.changed),
   createReducerType('CHANGE_CANVAS_TITLE_ACTION',(action)=>action.changed),
-  createReducerType('CHANGE_CANVAS_OPTIONS_ACTION',(action)=>action.changed)
+  createReducerType('CHANGE_CANVAS_DESCRIPTION_ACTION',(action)=>action.changed),
+  createReducerType('CHANGE_CANVAS_OPTIONS_ACTION',(action)=>action.changed),
+  createReducerType('CHANGE_CANVAS_CONFIGURATION_ACTION',(action)=>action.changed)
 )

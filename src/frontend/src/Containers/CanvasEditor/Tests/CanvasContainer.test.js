@@ -46,7 +46,7 @@ const blockDef2 = {
 
 const blockDef3 = {
     block: b5,
-    buildingBlockType: "target",
+    buildingBlockType: "data",
     lockings: [],
     editable: true,
     project_id: 'pid1',

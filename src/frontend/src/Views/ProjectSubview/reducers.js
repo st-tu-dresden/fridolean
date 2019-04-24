@@ -26,6 +26,7 @@ export function projectReducer(state=initStateProjectView, action) {
                         {
                             id: action.canvasId,
                             title: action.title,
+                            configuration: action.configuration,
                             type: action.canvasType,
                             timestamp: action.timestamp, // TODO: Replace with real Date
                         }

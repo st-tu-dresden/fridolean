@@ -113,6 +113,7 @@
 .small-segment{
 	max-height: 312px;
 	overflow: auto;
+	border-width: 10px;
 }
 
 .double-segment{
@@ -141,6 +142,26 @@
 
 .canvas-title-segment {
 	margin-left: 15px !important;
+	margin-bottom: 10px !important;
 	border-style: none !important;
 	box-shadow: none !important;
+	width: 100%;
+	height:auto !important;
+}
+
+.canvas-title-tagSelector{
+	margin-top: 10px;
+	margin-bottom: -30px;
+	right: 0px;
+	float: right;
+	font-size: 0.9em;
+	height: auto;
+}
+
+.postcard {
+	background-color: rgb(255,250,205) !important;
+	border-style: none !important;
+	box-shadow: none !important;
+	overflow: auto;
+	border: 7px solid yellow !important;
 }

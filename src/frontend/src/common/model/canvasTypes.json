@@ -7,7 +7,7 @@
             "Key Resources",
             "Customer Relationships",
             "Channels",
-            {"title": "Customer Segments", "buildingBlockType": "target"},
+            "Customer Segments",
             "Cost Structure",
             "Revenue Streams",
             {"title": "Value Propositions", "buildingBlockType": "link"}
@@ -67,6 +67,12 @@
             "Advantages",
             "Objections",
             "Features"
+        ]
+    },
+    "POSTCARD":{
+        "view":"Letter to Grandma",
+        "blocks":[
+           "Letter to Grandma"
         ]
     }
 }

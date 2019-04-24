@@ -12,8 +12,8 @@ class PostIt extends Component {
     constructor(...args) {
         super(...args);
         this.textArea = null;
-        this.boundPrintListener = this.printListener.bind(this)
     }
+   
 
     printListener(evt) {
         this.setState({ ...this.state || {}, interactive: !evt.matches })
@@ -32,8 +32,7 @@ class PostIt extends Component {
         return this.state.interactive && (this.props.editable !== false);
     }
 
-    renderEditor() {
-
+    renderEditor() {   
         return (<TextArea
             disabled={!this.isEditable()}
             autoHeight
@@ -160,6 +159,7 @@ class PostIt extends Component {
             onDragOver={this.props.onDragOver}
             onDrop={this.props.onDrop}
             draggable="true"
+            className="postit"
             title={this.props.model.content.title}
             onDragStart={this.dragStart.bind(this)}
         >

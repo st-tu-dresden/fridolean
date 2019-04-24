@@ -11,7 +11,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 // CORS
-var whitelist = ['http://localhost:3000', 'http://localhost:3001', process.env.CORS_DOMAIN]
+var whitelist = ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', process.env.CORS_DOMAIN]
 app.use(cors({
     origin: function (origin, callback) {
         if (origin === undefined || whitelist.indexOf(origin) !== -1) {

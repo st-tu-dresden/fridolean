@@ -3,7 +3,7 @@
  */
 
 const mongoose = require('mongoose');
-const expected_version = 2;
+const expected_version = 3;
 const default_version = 0;
 let version_checked=false;
 let version_check_required=false;
@@ -71,19 +71,19 @@ function requireVersionCheck(){
 
 module.exports = {
     connect: async (uri) => {
-        mongoose.connect(uri);
+        mongoose.connection.openUri("mongodb://" + uri);
         // plug in promise library
         mongoose.Promise = global.Promise;
 
         mongoose.connection.on("error", (err) => {
-            console.log(`Mongoose connection error: ${err}`);
+            console.error(`Mongoose connection error: ${err}`);
             process.exit(1);
         });
 
         await testVersion();
-
         // load models
         require("./user/model");
+
     },
     mongoose,
     assertCurrentVersion,

@@ -50,8 +50,10 @@ const canvasSchema = mongoose.Schema({
     _id: {type: String, default: uuidv4},
     canvasType: String,
     title: String,
+    description: String,
     tags: [String],
     options: canvasOptionsSchema,
+    configuration: String,
     lastEdited: Number,
     buildingBlocks: [buildingBlockSchema]
 },{usePushEach: true })
@@ -80,7 +82,7 @@ const memberSchema = mongoose.Schema({
     rights: String //Can be 'READ' || 'EDIT'
 }, idFalse)
 
-// Schema for a timeline entry 
+// Schema for a timeline entry
 const timelineEntrySchema = mongoose.Schema({
     _id: {type: String, default: uuidv4},
     timestamp: Number,

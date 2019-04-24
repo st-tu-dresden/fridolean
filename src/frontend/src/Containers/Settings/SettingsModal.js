@@ -5,6 +5,10 @@ import CanvasSettings from './CanvasSettings'
 import TagSettings from './TagSettings'
 import ProjectSettings from './ProjectSettings'
 
+const modalStyle = {
+    margin: 'auto 0px 0px auto',
+    top: '15%',
+};
 
 class SettingsModal extends Component{
 
@@ -73,47 +77,51 @@ class SettingsModal extends Component{
     renderCore(){
         if(this.state.canvas){
             if(this.state.block && this.state.entry)
-                return <EntrySettings 
+                return <EntrySettings
                     readonly={this.props.readonly}
                     openSettings={this.loadTarget} 
                     store={this.props.store} 
                     dispatch={this.props.dispatch} 
-                    canvasID={this.state.canvas} blockID={this.state.block} entryID={this.state.entry}/>
+                    canvasID={this.state.canvas} 
+                    blockID={this.state.block} 
+                    entryID={this.state.entry}/>
             else
-                return <CanvasSettings 
+                return <CanvasSettings
                     readonly={!!this.props.readonly}
-                    openSettings={this.loadTarget} 
-                    store={this.props.store} 
-                    dispatch={this.props.dispatch} 
+                    openSettings={this.loadTarget}
+                    store={this.props.store}
+                    dispatch={this.props.dispatch}
                     canvasID={this.state.canvas}/>
         }else if(this.state.tag){
-            return <TagSettings 
+            return <TagSettings
                 readonly={!!this.props.readonly}
-                openSettings={this.loadTarget} 
+                openSettings={this.loadTarget}
                 store={this.props.store} 
                 dispatch={this.props.dispatch} 
                 tagID={this.state.tag}/>
         }else
-            return <ProjectSettings 
+            return <ProjectSettings
                 readonly={!!this.props.readonly}
-                openSettings={this.loadTarget} 
-                store={this.props.store} 
+                openSettings={this.loadTarget}
+                store={this.props.store}
                 dispatch={this.props.dispatch}/>
     }
 
     render(){
         window.fridoProject=this.props.store;
         return (
-        <Modal open={this.state.open}>
+        
+        <Modal open={this.state.open} style={modalStyle}>
             <Modal.Header>
                 <Button secondary circular onClick={this.props.onClose} icon="arrow left"/>
                 &ensp;
                 {this.renderBreadcrumbs()}
             </Modal.Header>
-            <Modal.Content>
+            <Modal.Content scrolling>
             {this.renderCore()}
             </Modal.Content>
-        </Modal>)
+        </Modal>
+        )
     }
 }
 

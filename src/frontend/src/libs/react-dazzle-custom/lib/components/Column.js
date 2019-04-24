@@ -47,6 +47,17 @@ const defaultProps = {
 };
 
 class Column extends Component {
+
+ // TODO this is a custom modification and should be moved outside this folder
+  componentDidMount() {
+    // simulate a click for postcard canvas
+    // check if there are more than 0 textareas on page, if yes -> dont call click method
+    if (document.getElementsByClassName("canvas_POSTCARD").length === 1
+     && document.getElementsByClassName("defaultWidgetFrame").length === 0) {
+       document.querySelector(".canvas_POSTCARD .add-widget-button").click();
+    }
+  }
+
   render() {
     const {
       className,
@@ -62,23 +73,26 @@ class Column extends Component {
       editableColumnClass,
       droppableColumnClass,
       addWidgetComponentText,
-      addWidgetComponent
+      addWidgetComponent,
+      type
     } = this.props;
-
+    
     let classes = className;
     classes = editable ? `${className} ${editableColumnClass}` : classes;
     const isActive = isOver && canDrop;
     classes = isActive ? `${classes} ${droppableColumnClass}` : classes;
-
     let addWidgetComponentToUse = null;
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if(this.props.canAdd){
+  
       if (addWidgetComponent) {
         // eslint max-len=off
         addWidgetComponentToUse = createElement(addWidgetComponent, {	text: addWidgetComponentText, onClick:	() => {onAdd();} }); // eslint-disable-line
-      } else {
-        addWidgetComponentToUse = <AddWidget text={addWidgetComponentText} onClick={() => {onAdd();}}/>; // eslint-disable-line
       }
+      else {
+        if(type !=="POSTCARD")
+        addWidgetComponentToUse = <AddWidget text={addWidgetComponentText} type={type} onClick={() => {onAdd();}}/>; // eslint-disable-line
+      }
+
     }
 
     return (

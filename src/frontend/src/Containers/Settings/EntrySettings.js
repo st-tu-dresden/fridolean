@@ -32,7 +32,9 @@ class EntrySettings extends BaseSettings {
                 this.props.dispatch(changeEntry({ ...entry, content: { ...entry.content, title: input.value } }, this.props.blockID, this.props.canvasID))
             } />
             <Divider horizontal />
-            <TagSelector readonly={this.props.readonly} globalTags={globalTags} localTags={entry.content.tags}
+            <TagSelector readonly={this.props.readonly} 
+                globalTags={globalTags} 
+                localTags={entry.content.tags}
                 onChange={this.onTagsChange.bind(this)}
                 onOpenTag={this.onOpenTag.bind(this)}
                 onCreateTag={this.createTag.bind(this)} />

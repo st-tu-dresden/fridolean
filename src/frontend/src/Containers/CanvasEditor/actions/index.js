@@ -32,7 +32,7 @@ export const addEntryCanvas = function(canvas_uuid, blocks={}, canvases={}){
 
 export const delAdd = function(canvas_uuid, delCanvases=[], newCanvases={}, delBlocks={},newBlocks={}){
   let changed = [
-    ...[...delCanvases,...Object.keys(newCanvases)].map((canvas_id)=>"canvases."+canvas_id),
+    ...[...delCanvases,...Object.keys(1)].map((canvas_id)=>"canvases."+canvas_id),
     ...[...Object.keys(delBlocks),...Object.keys(newBlocks)].map((block_id)=>`canvases.${canvas_uuid}.buildingBlocks.${block_id}.entries`)
   ];
   Object.keys(delBlocks).forEach((block_id)=>Object.values(delBlocks[block_id]).forEach((entry)=>entry.content.tags.forEach((tag)=>changed.push(`tags.${tag}.entries.${entry._id}`))))
@@ -81,6 +81,18 @@ export const changeEntry = (e, block_uuid, canvas_uuid) => {
     block_uuid: block_uuid,
     canvas_uuid: canvas_uuid,
     changed: "canvases."+canvas_uuid+".buildingBlocks."+block_uuid+".entries"+(e._id?"."+e._id+".content":"")
+  }
+};
+
+export const changeCanvasDescription = (canvas_uuid, description) => {
+  if (description===undefined||description===null) {
+    throw new Error("Description was undefined or null");
+  }
+  return {
+    type: 'CHANGE_CANVAS_DESCRIPTION_ACTION',
+    description,
+    canvas_uuid,
+    changed:`canvases.${canvas_uuid}.description`
   }
 };
 
@@ -185,5 +197,14 @@ export const changeCanvasOptions = (canvas_uuid, options)=>{
     options,
     canvas_uuid,
     changed:`canvases.${canvas_uuid}.options`
+  }
+}
+
+export const changeCanvasConfiguration = (canvas_uuid, configuration)=>{
+  return {
+    type: "CHANGE_CANVAS_CONFIGURATION_ACTION",
+    configuration,
+    canvas_uuid,
+    changed:`canvases.${canvas_uuid}.configuration`
   }
 }
